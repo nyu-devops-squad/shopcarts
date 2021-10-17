@@ -4,7 +4,6 @@ My Service
 Describe what your service does here
 """
 
-
 import os
 import sys
 import logging

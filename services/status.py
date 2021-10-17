@@ -23,7 +23,6 @@ RFC 6585: http://tools.ietf.org/html/rfc6585
 HTTP_100_CONTINUE = 100
 HTTP_101_SWITCHING_PROTOCOLS = 101
 
-
 # Successful - 2xx
 HTTP_200_OK = 200
 HTTP_201_CREATED = 201
