@@ -2,7 +2,18 @@
 Models for YourResourceModel
 
 All of the models are stored in this module
+
+Models
+------
+Shopcart
+Attributes:
+-----------
+id - (integer) auto increment
+product_id - (TBD) from the product API
+customer_id - (TBD) from the customer API
+quantity - (integer) quantity of the items
 """
+
 import logging
 from flask_sqlalchemy import SQLAlchemy
 
@@ -18,7 +29,7 @@ class DataValidationError(Exception):
     pass
 
 
-class YourResourceModel(db.Model):
+class Shopcart(db.Model):
     """
     Class that represents a <your resource model name>
     """
@@ -27,7 +38,9 @@ class YourResourceModel(db.Model):
 
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(63))
+    product_id = db.Column(db.Integer)
+    customer_id = db.Column(db.Integer)
+    quantity = db.Column(db.Integer)
 
     def __repr__(self):
         return "<YourResourceModel %r id=[%s]>" % (self.name, self.id)
