@@ -25,7 +25,6 @@ db = SQLAlchemy()
 
 class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
-
     pass
 
 
@@ -33,7 +32,6 @@ class Shopcart(db.Model):
     """
     Class that represents a <your resource model name>
     """
-
     app = None
 
     # Table Schema
@@ -49,7 +47,7 @@ class Shopcart(db.Model):
         """
         Creates a YourResourceModel to the database
         """
-        logger.info("Creating %s", self.name)
+        logger.info("Creating %s", self.id)
         self.id = None  # id must be none to generate next primary key
         db.session.add(self)
         db.session.commit()
@@ -58,18 +56,24 @@ class Shopcart(db.Model):
         """
         Updates a YourResourceModel to the database
         """
-        logger.info("Saving %s", self.name)
+        logger.info("Saving %s", self.id)
         db.session.commit()
 
     def delete(self):
         """ Removes a YourResourceModel from the data store """
-        logger.info("Deleting %s", self.name)
+        logger.info("Deleting %s", self.id)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
         """ Serializes a YourResourceModel into a dictionary """
-        return {"id": self.id, "name": self.name}
+        return {
+            "id": self.id,
+            "product_id": self.product_id,
+            "customer_id": self.customer_id,
+            "quantity":self.quantity
+        }
+
 
     def deserialize(self, data):
         """
@@ -79,7 +83,10 @@ class Shopcart(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.name = data["name"]
+            self.id = data["id"]
+            self.product_id = data["product_id"]
+            self.customer_id = data["customer_id"]
+            self.quantity = data["quantity"]
         except KeyError as error:
             raise DataValidationError(
                 "Invalid YourResourceModel: missing " + error.args[0]
@@ -107,23 +114,22 @@ class Shopcart(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find(cls, by_id):
+    def find_by_id(cls, by_id):
         """ Finds a YourResourceModel by it's ID """
         logger.info("Processing lookup for id %s ...", by_id)
         return cls.query.get(by_id)
+
+    @classmethod
+    def find_by_customer_id(cls, customer_id):
+        """Returns all YourResourceModels with the given id
+        Args:
+            id (Integer): the id of the YourResourceModels you want to match
+        """
+        logger.info("Processing name query for %s ...", customer_id)
+        return cls.query.filter(cls.customer_id == id)
 
     @classmethod
     def find_or_404(cls, by_id):
         """ Find a YourResourceModel by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)
-
-    @classmethod
-    def find_by_name(cls, name):
-        """Returns all YourResourceModels with the given name
-
-        Args:
-            name (string): the name of the YourResourceModels you want to match
-        """
-        logger.info("Processing name query for %s ...", name)
-        return cls.query.filter(cls.name == name)
