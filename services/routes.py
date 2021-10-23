@@ -24,9 +24,36 @@ from . import app
 @app.route("/")
 def index():
     """ Root URL response """
+
+    app.logger.info("Request for Root URL")
     return (
-        "Reminder: return some useful information in json format about the service here",
+        jsonify(
+            name="Shopcarts REST API Service",
+            version="1.0",
+            # paths=url_for("list_shopcarts", _external=True),
+        ),
         status.HTTP_200_OK,
+    )
+
+######################################################################
+# CREATE A NEW SHOPCART
+######################################################################
+@app.route("/shopcart", methods=["POST"])
+def create_wishlists():
+    """
+    Creates a shopcart
+    """
+    app.logger.info("Request to create a shopcart")
+    check_content_type("application/json")
+    shopcart = Shopcart()
+    shopcart.deserialize(request.get_json())
+
+    shopcart.create()
+    message = shopcart.serialize()
+    location_url = url_for("create_shopcart", wishlist_id=shopcart.id, _external=True)
+    app.logger.info("Wishlist with ID [%s] created.", shopcart.id)
+    return make_response(
+        jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
 
