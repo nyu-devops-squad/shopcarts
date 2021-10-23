@@ -50,8 +50,9 @@ def create_wishlists():
 
     shopcart.create()
     message = shopcart.serialize()
-    location_url = url_for("create_shopcart", wishlist_id=shopcart.id, _external=True)
-    app.logger.info("Wishlist with ID [%s] created.", shopcart.id)
+    location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
+    app.logger.info("Shorpcart for customer ID [%s] created.", shopcart.customer_id)
+
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
