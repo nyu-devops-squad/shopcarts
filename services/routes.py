@@ -19,18 +19,6 @@ from services.models import Shopcart, DataValidationError
 from . import app
 
 
-def check_content_type(media_type):
-    """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", content_type)
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        "Content-Type must be {}".format(media_type),
-    )
-
-
 ######################################################################
 # GET INDEX
 ######################################################################
@@ -51,8 +39,8 @@ def index():
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-@app.route("/shopcart", methods=["POST"])
-def create_shopcart():
+@app.route("/shopcarts", methods=["POST"])
+def create_shopcarts():
     """
     Creates a shopcart
     """
@@ -72,6 +60,22 @@ def create_shopcart():
 
 
 ######################################################################
+# LIST ALL SHOPCARTS
+######################################################################
+@app.route("/shopcarts", methods=["GET"])
+def list_shopcarts():
+    """
+    Return all of the shopcarts
+    """
+    app.logger.info("Request for shopcarts list")
+    shopcarts=[]
+    shopcarts=Shopcart.all()
+    results=[shopcart.serialize() for shopcart in shopcarts]
+    app.logger.info("Returning %d shopcarts", len(results))
+    return make_response(jsonify(results),status.HTTP_200_OK)
+    
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
@@ -80,6 +84,18 @@ def init_db():
     """ Initialies the SQLAlchemy app """
     global app
     Shopcart.init_db(app)
+
+def check_content_type(media_type):
+    """Checks that the media type is correct"""
+    content_type = request.headers.get("Content-Type")
+    if content_type and content_type == media_type:
+        return
+    app.logger.error("Invalid Content-Type: %s", content_type)
+    abort(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        "Content-Type must be {}".format(media_type),
+    )
+
 
     
     

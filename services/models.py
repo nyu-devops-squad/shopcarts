@@ -52,11 +52,13 @@ class Shopcart(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def save(self):
+    def update(self):
         """
-        Updates a YourResourceModel to the database
+        Updates a product quantity
         """
-        logger.info("Saving %s", self.id)
+        logger.info("Saving %s", self.customer_id)
+        if not self.customer_id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
@@ -109,8 +111,8 @@ class Shopcart(db.Model):
 
     @classmethod
     def all(cls):
-        """ Returns all of the YourResourceModels in the database """
-        logger.info("Processing all YourResourceModels")
+        """ Returns all of the shopcarts in the database """
+        logger.info("Processing all shopcarts")
         return cls.query.all()
 
     @classmethod
@@ -129,7 +131,7 @@ class Shopcart(db.Model):
         return cls.query.filter(cls.customer_id == id)
 
     @classmethod
-    def find_or_404(cls, by_id):
-        """ Find a YourResourceModel by it's id """
-        logger.info("Processing lookup or 404 for id %s ...", by_id)
-        return cls.query.get_or_404(by_id)
+    def find_or_404(cls, id):
+        """ Find a shopcart by it's id """
+        logger.info("Processing lookup or 404 for id %s ...", id)
+        return cls.query.get_or_404(id)
