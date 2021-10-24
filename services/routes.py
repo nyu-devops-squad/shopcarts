@@ -18,6 +18,19 @@ from services.models import Shopcart, DataValidationError
 # Import Flask application
 from . import app
 
+
+def check_content_type(media_type):
+    """Checks that the media type is correct"""
+    content_type = request.headers.get("Content-Type")
+    if content_type and content_type == media_type:
+        return
+    app.logger.error("Invalid Content-Type: %s", content_type)
+    abort(
+        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        "Content-Type must be {}".format(media_type),
+    )
+
+
 ######################################################################
 # GET INDEX
 ######################################################################
@@ -67,3 +80,6 @@ def init_db():
     """ Initialies the SQLAlchemy app """
     global app
     Shopcart.init_db(app)
+
+    
+    
