@@ -79,14 +79,14 @@ def read_shopcart(customer_id):
     Reads a shopcart
     """
     app.logger.info("Request to read a shopcart for customer " + customer_id)
-    shopcart = Shopcart.find_by_customer_id(customer_id).first()
-    if not shopcart:
+    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+    if not shopcarts:
         message = {"error": "Shopcart for the customer does not exist!"}
         return make_response(
         jsonify(message), status.HTTP_404_NOT_FOUND
     )
-    message = shopcart.serialize()
-    location_url = url_for("read_shopcart", id=shopcart.id, customer_id=shopcart.customer_id, _external=True)
+    message = [shopcart.serialize() for shopcart in shopcarts]
+    location_url = url_for("read_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
     
     return make_response(
         jsonify(message), status.HTTP_200_OK, {"Location": location_url}
@@ -101,14 +101,17 @@ def delete_shopcart(customer_id):
     Delete a shopcart
     """
     app.logger.info("Request to delete a shopcart for customer " + customer_id)
-    shopcart = Shopcart.find_by_customer_id(customer_id).first()
-    message = shopcart.serialize()
+    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+
+    message = [shopcart.serialize() for shopcart in shopcarts]
     
-    shopcart.delete()
-    location_url = url_for("delete_shopcart", id=shopcart.id, customer_id=shopcart.customer_id, _external=True)
+    for shopcart in shopcarts:
+        shopcart.delete()
+    
+    location_url = url_for("delete_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
     
     return make_response(
-        jsonify(message), status.HTTP_202_ACCEPTED, {"Location": location_url}
+        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
     )
     
 ######################################################################
