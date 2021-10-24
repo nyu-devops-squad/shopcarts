@@ -72,6 +72,23 @@ def create_shopcart():
 
 
 ######################################################################
+# READING A SHOPCART
+######################################################################
+@app.route("/shopcart/<customer_id>", methods=["GET"])
+def read_shopcart(customer_id):
+    """
+    Reads a shopcart
+    """
+    app.logger.info("Request to read a shopcart for customer " + customer_id)
+    shopcart = Shopcart.find_by_customer_id(customer_id).first()
+    message = shopcart.serialize()
+    location_url = url_for("read_shopcart", id=shopcart.id, customer_id=shopcart.customer_id, _external=True)
+    
+    return make_response(
+        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+    )
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
