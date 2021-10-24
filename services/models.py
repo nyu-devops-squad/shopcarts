@@ -121,9 +121,9 @@ class Shopcart(db.Model):
 
     @classmethod
     def find_by_customer_id(cls, customer_id):
-        """Returns all shopcarts with the given id
+        """Returns the shopcart with the given customer_id
         Args:
-            id (Integer): the id of the shopcarts you want to match
+            customer_id (Integer): the customer_id that the shopcart matches
         """
         logger.info("Processing name query for %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
