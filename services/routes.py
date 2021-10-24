@@ -51,7 +51,7 @@ def index():
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-@app.route("/shopcart", methods=["POST"])
+@app.route("/shopcarts", methods=["POST"])
 def create_shopcart():
     """
     Creates a shopcart
@@ -64,7 +64,7 @@ def create_shopcart():
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
-    app.logger.info("Shorpcart for customer ID [%s] created.", shopcart.customer_id)
+    app.logger.info("Shopcart for customer ID [%s] created.", shopcart.customer_id)
 
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
@@ -73,7 +73,7 @@ def create_shopcart():
 ######################################################################
 # READING A SHOPCART
 ######################################################################
-@app.route("/shopcart/<customer_id>", methods=["GET"])
+@app.route("/shopcarts/<customer_id>", methods=["GET"])
 def read_shopcart(customer_id):
     """
     Reads a shopcart
@@ -95,7 +95,7 @@ def read_shopcart(customer_id):
 ######################################################################
 # DELETING A SHOPCART
 ######################################################################
-@app.route("/shopcart/<customer_id>", methods=["DELETE"])
+@app.route("/shopcarts/<customer_id>", methods=["DELETE"])
 def delete_shopcart(customer_id):
     """
     Delete a shopcart
