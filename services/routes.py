@@ -39,7 +39,7 @@ def index():
 # CREATE A NEW SHOPCART
 ######################################################################
 @app.route("/shopcart", methods=["POST"])
-def create_wishlists():
+def create_shopcart():
     """
     Creates a shopcart
     """
