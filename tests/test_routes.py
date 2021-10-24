@@ -56,7 +56,7 @@ class TestShopcartServer(TestCase):
     #  H E L P E R   M E T H O D S
     ######################################################################
 
-    def _create_wishlists(self, count):
+    def _create_shopcart(self, count):
         """Factory method to create shopcart"""
         shopcarts = []
         for _ in range(count):
