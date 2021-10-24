@@ -8,3 +8,5 @@ To run the flask app -
     export FLASK_APP= services/__init__.py    
     flask run --host=0.0.0.0  
 ```  
+
+To run testing we use ```nosetests```
