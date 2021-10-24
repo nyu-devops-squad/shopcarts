@@ -54,7 +54,7 @@ class Shopcart(db.Model):
 
     def update(self):
         """
-        Updates a product quantity
+        Updates a shopcart to the database
         """
         logger.info("Saving %s", self.customer_id)
         if not self.customer_id:
@@ -116,10 +116,15 @@ class Shopcart(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_id(cls, by_id):
-        """ Finds a YourResourceModel by it's ID """
-        logger.info("Processing lookup for id %s ...", by_id)
-        return cls.query.get(by_id)
+    def find_by_id(cls, shopcart_id):
+        """Finds a Shopcart by it's ID
+        :param shopcart_id: the id of the Shopcart to find
+        :type shopcart_id: int
+        :return: an instance with the shopcart_id, or None if not found
+        :rtype: Shopcart
+        """
+        logger.info("Processing lookup for id %s ...", shopcart_id)
+        return cls.query.get(shopcart_id)
 
     @classmethod
     def find_by_customer_id(cls, customer_id):

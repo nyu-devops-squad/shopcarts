@@ -76,6 +76,27 @@ def list_shopcarts():
     
 
 ######################################################################
+# UPDATE A SHOPCART 
+######################################################################
+@app.route("/shopcarts/<int:shopcart_id>", methods=["PUT"])
+def update_shopcarts(shopcart_id):
+    """
+    Update a Shopcart
+
+    This endpoint will update a Shopcart based the body that is posted
+    """
+    app.logger.info("Request to update Shopcart with id: %s", id)
+    check_content_type("application/json")
+    shopcart = Shopcart.find_by_id(shopcart_id)
+    if not shopcart:
+        raise NotFound("ShopCart with id '{}' was not found.".format(shopcart_id))
+    shopcart.deserialize(request.get_json())
+    shopcart.id = shopcart_id
+    shopcart.update()
+    app.logger.info("Pet with ID [%s] updated.", shopcart.id)
+    return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
