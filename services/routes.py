@@ -51,11 +51,12 @@ def create_shopcart():
     check_content_type("application/json")
     shopcart = Shopcart()
     shopcart.deserialize(request.get_json())
-    # check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
+    check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
     # check if the database already has the entry. if so, abort creating and use the update instead
-    # if check_shopcart:
-        # app.logger.info("Resource already been created, update it")
-        # check_shopcart.delete()
+    if check_shopcart:
+        app.logger.info("Resource already been created, update it")
+        check_shopcart.delete()
+        
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
