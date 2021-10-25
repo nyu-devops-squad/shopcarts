@@ -120,7 +120,7 @@ def update_shopcarts(shopcart_id):
     app.logger.info("Pet with ID [%s] updated.", shopcart.id)
     return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
 
-=======
+
 # DELETING A SHOPCART
 ######################################################################
 @app.route("/shopcarts/<customer_id>", methods=["DELETE"])
