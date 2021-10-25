@@ -54,10 +54,8 @@ def create_shopcart():
     # check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
     # check if the database already has the entry. if so, abort creating and use the update instead
     # if check_shopcart:
-    #     app.logger.info("Resource already been created")
-    #     message = {"error": "Shopcart for customer ID [%s] has already been created. Please use update instead"}
-    #     location_url = url_for("create_shopcart", _external=True)
-    #     return make_response(jsonify(message), status.HTTP_400_BAD_REQUEST)
+        # app.logger.info("Resource already been created, update it")
+        # check_shopcart.delete()
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
