@@ -109,7 +109,6 @@ class TestShopcartServer(TestCase):
             test_shopcart.quantity, "quantity does not match"
         )
 
-
     def test_update_shopcart(self):
         """Update an existing Shopcart"""
         # create a shopcart to update
@@ -123,7 +122,7 @@ class TestShopcartServer(TestCase):
         logging.debug(new_shopcart)
         new_shopcart["quantity"] = 3
         resp = self.app.put(
-            "/shopcarts/{}".format(new_shopcart["customer_id"]),
+            "{0}/{1}/{2}".format(BASE_URL, new_shopcart["customer_id"], new_shopcart["product_id"]),
             json=new_shopcart,
             content_type="application/json",
         )
@@ -138,11 +137,25 @@ class TestShopcartServer(TestCase):
         data = repr.get_json()
         self.assertEqual(len(data),5)
 
-  
+    def test_read_shopcart(self):
+        """Read an existing shopcart"""
+        test_shopcart = self._create_shopcart(1)[0]
+        resp = self.app.get("{0}/{1}".format(BASE_URL, test_shopcart.customer_id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["product_id"], test_shopcart.product_id)
+
     def test_delete_shopcart(self):
         """Delete an existing shopcart"""
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post(
+            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
         new_shopcart = resp.get_json()
         logging.debug(new_shopcart)
+
         resp = self.app.delete(
             "{0}/{1}".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
         )
@@ -154,4 +167,3 @@ class TestShopcartServer(TestCase):
             "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-

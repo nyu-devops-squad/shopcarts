@@ -127,7 +127,7 @@ class Shopcart(db.Model):
         Args:
             customer_id (Integer): the customer_id that the shopcart matches
         """
-        logger.info("Processing name query for %s ...", customer_id)
+        logger.info("Processing query for customer %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
 
     @classmethod
@@ -135,3 +135,15 @@ class Shopcart(db.Model):
         """ Find a shopcart by it's id """
         logger.info("Processing lookup or 404 for id %s ...", by_id)
         return cls.query.get_or_404(by_id)
+
+    @classmethod
+    def find_by_shopcart_item(cls, customer_id, product_id):
+        """Returns the shopcart record with the given costomer_id and product_id
+
+        Args:
+            customer_id (Integer)
+            product_id (Integer)
+        """
+        logger.info("Processing query for costomer_id: %s ...", customer_id)
+        return cls.query.filter(cls.customer_id == customer_id, cls.product_id == product_id)
+
