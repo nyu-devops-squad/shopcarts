@@ -108,4 +108,25 @@ class TestShopcartServer(TestCase):
             new_shopcart["quantity"],
             test_shopcart.quantity, "quantity does not match"
         )
-  
+
+    def test_update_shopcart(self):
+        """Update an existing Shopcart"""
+        # create a shopcart to update
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post(
+            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # update the shopcart
+        new_shopcart = resp.get_json()
+        logging.debug(new_shopcart)
+        new_shopcart["quantity"] = 3
+        resp = self.app.put(
+            "/shopcarts/{}".format(new_shopcart["customer_id"]),
+            json=new_shopcart,
+            content_type="application/json",
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        updated_shopcart = resp.get_json()
+        self.assertEqual(updated_shopcart["quantity"], 3)
