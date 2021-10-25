@@ -9,6 +9,7 @@ import sys
 import logging
 from flask import Flask, jsonify, request, url_for, make_response, abort
 from . import status  # HTTP Status Codes
+from werkzeug.exceptions import NotFound
 
 # For this example we'll use SQLAlchemy, a popular ORM that supports a
 # variety of backends including SQLite, MySQL, and PostgreSQL
@@ -50,7 +51,12 @@ def create_shopcart():
     check_content_type("application/json")
     shopcart = Shopcart()
     shopcart.deserialize(request.get_json())
-
+    check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
+    # check if the database already has the entry. if so, abort creating and use the update instead
+    if check_shopcart:
+        app.logger.info("Resource already been created")
+        message = {"error": "Shopcart for customer ID [%s] has already been created. Please use update instead"}
+        return make_response(jsonify(message), status.HTTP_400_BAD_REQUEST)
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
@@ -102,25 +108,23 @@ def list_shopcarts():
 ######################################################################
 # UPDATE A SHOPCART 
 ######################################################################
-@app.route("/shopcarts/<int:shopcart_id>", methods=["PUT"])
-def update_shopcarts(shopcart_id):
+@app.route("/shopcarts/<int:customer_id>/<int:product_id>", methods=["PUT"])
+def update_shopcarts(customer_id, product_id):
     """
-    Update a Shopcart
-
+    Update the quantity of an item in a Shopcart
     This endpoint will update a Shopcart based the body that is posted
     """
-    app.logger.info("Request to update Shopcart with id: %s", id)
+    app.logger.info("Request to update Shopcart for costomer_id: %s", customer_id)
     check_content_type("application/json")
-    shopcart = Shopcart.find_by_id(shopcart_id)
+    shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
     if not shopcart:
-        raise NotFound("ShopCart with id '{}' was not found.".format(shopcart_id))
+        raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
     shopcart.deserialize(request.get_json())
-    shopcart.id = shopcart_id
     shopcart.update()
-    app.logger.info("Pet with ID [%s] updated.", shopcart.id)
+    app.logger.info("Shopcart with custoemr_id [%s] updated.", shopcart.customer_id)
     return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
 
-
+######################################################################
 # DELETING A SHOPCART
 ######################################################################
 @app.route("/shopcarts/<customer_id>", methods=["DELETE"])
