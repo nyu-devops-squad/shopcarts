@@ -31,8 +31,3 @@ class ShopcartFactory(factory.Factory):
     quantity = FuzzyInteger(0, 10, step=1)
     customer_id = FuzzyChoice(choices=[1000,2000,3000,8000])
 
-
-
-
-
-
