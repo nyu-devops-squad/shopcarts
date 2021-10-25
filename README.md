@@ -9,4 +9,10 @@ To run the flask app -
     flask run --host=0.0.0.0  
 ```  
 
-To run testing we use ```nosetests```
+To run testing we use -  
+``` 
+    vagrant up
+    vagrant ssh  
+    cd /vagrant      
+    nosetests 
+```  
