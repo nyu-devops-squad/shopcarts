@@ -25,4 +25,3 @@ URL | Operation | Description
 `POST /shopcarts/<int:customer_id>` | CREATE | Creates a new item entry for the cart
 `PUT /shopcarts/<int:customer_id>/<int:product_id>` | UPDATE | Update particular item quantity
 `DELETE /shopcarts/<int:customer_id>/>` | DELETE | Delete all shopcart items for a customer
-`PUT /shopcarts/checkout/<int:customer_id>/<int:product_id>` | UPDATE | Move the shop cart item to order
