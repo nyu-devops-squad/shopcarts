@@ -109,3 +109,11 @@ class TestShopcartServer(TestCase):
             test_shopcart.quantity, "quantity does not match"
         )
   
+
+    def test_read_shopcart(self):
+        test_shopcart = self._create_shopcart(1)[0]
+        resp = self.app.get("{0}/{1}".format(BASE_URL, test_shopcart.customer_id))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(data[0]["product_id"], test_shopcart.product_id)
+        
