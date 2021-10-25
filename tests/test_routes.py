@@ -18,7 +18,7 @@ from .factories import ShopcartFactory
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
 )
-BASE_URL = "/shopcart"
+BASE_URL = "/shopcarts"
 
 ######################################################################
 #  T E S T   C A S E S
