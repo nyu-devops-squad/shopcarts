@@ -6,7 +6,7 @@ import logging
 import unittest
 import os
 from services.models import Shopcart, DataValidationError, db
-from factories import ShopcartFactory
+from tests.factories import ShopcartFactory
 from services import app
 
 DATABASE_URI = os.getenv(
