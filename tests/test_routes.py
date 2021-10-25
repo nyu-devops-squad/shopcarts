@@ -109,3 +109,25 @@ class TestShopcartServer(TestCase):
             test_shopcart.quantity, "quantity does not match"
         )
   
+    def test_delete_shopcart(self):
+        """Delete an existing shopcart"""
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post(
+            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        new_shopcart = resp.get_json()
+        logging.debug(new_shopcart)
+
+        resp = self.app.delete(
+            "{0}/{1}".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(len(resp.data), 0)
+
+        # make sure they are deleted
+        resp = self.app.get(
+            "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
