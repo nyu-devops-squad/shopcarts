@@ -52,11 +52,13 @@ class Shopcart(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def save(self):
+    def update(self):
         """
         Updates a shopcart to the database
         """
-        logger.info("Saving %s", self.id)
+        logger.info("Saving %s", self.customer_id)
+        if not self.customer_id:
+            raise DataValidationError("Update called with empty ID field")
         db.session.commit()
 
     def delete(self):
