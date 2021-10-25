@@ -85,7 +85,7 @@ class Shopcart(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.id = data["id"]
+            # self.id = data["id"]
             self.product_id = data["product_id"]
             self.customer_id = data["customer_id"]
             self.quantity = data["quantity"]

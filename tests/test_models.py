@@ -83,7 +83,45 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(shopcarts[0].id, 1)
         self.assertEqual(shopcart.quantity, 3)
 
+    def test_delete_shopcart(self):
+        fake_shopcart = ShopcartFactory()
+        logging.debug(fake_shopcart)
+        fake_shopcart.create()
+        logging.debug(fake_shopcart)
+        self.assertEqual(len(fake_shopcart.all()), 1)
+        # delete the shopcart and make sure it isn't in the database
+        fake_shopcart.delete()
+        self.assertEqual(len(fake_shopcart.all()), 0)
 
+    def test_serialize_shopcart(self):
+        """ Test serialization of a Pet """
+        shopcart = ShopcartFactory()
+        data = shopcart.serialize()
+        self.assertNotEqual(data, None)
+        self.assertIn("id", data)
+        self.assertEqual(data["id"], shopcart.id)
+        self.assertIn("customer_id", data)
+        self.assertEqual(data["customer_id"], shopcart.customer_id)
+        self.assertIn("product_id", data)
+        self.assertEqual(data["product_id"], shopcart.product_id)
+        self.assertIn("quantity", data)
+        self.assertEqual(data["quantity"], shopcart.quantity)
+
+    def test_deserialize_shopcart(self):
+        """ Test deserialization of a Pet """
+        data = {
+            "id": 1,
+            "customer_id": 123,
+            "product_id": 321,
+            "quantity": 2
+        }
+        shopcart = Shopcart()
+        shopcart.deserialize(data)
+        self.assertNotEqual(shopcart, None)
+        self.assertEqual(shopcart.id, None)
+        self.assertEqual(shopcart.customer_id, 123)
+        self.assertEqual(shopcart.product_id, 321)
+        self.assertEqual(shopcart.quantity, 2)
 
 
 

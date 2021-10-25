@@ -130,3 +130,10 @@ class TestShopcartServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         updated_shopcart = resp.get_json()
         self.assertEqual(updated_shopcart["quantity"], 3)
+
+    def test_list_shopcarts(self):
+        self._create_shopcart(5)
+        repr = self.app.get(BASE_URL)
+        self.assertEqual(repr.status_code, status.HTTP_200_OK)
+        data = repr.get_json()
+        self.assertEqual(len(data),5)
