@@ -102,8 +102,8 @@ def list_shopcarts():
 ######################################################################
 # UPDATE A SHOPCART 
 ######################################################################
-@app.route("/shopcarts/<int:shopcart_id>", methods=["PUT"])
-def update_shopcarts(shopcart_id):
+@app.route("/shopcarts/<int:customer_id>", methods=["PUT"])
+def update_shopcarts(customer_id):
     """
     Update a Shopcart
 
@@ -111,16 +111,15 @@ def update_shopcarts(shopcart_id):
     """
     app.logger.info("Request to update Shopcart with id: %s", id)
     check_content_type("application/json")
-    shopcart = Shopcart.find_by_id(shopcart_id)
+    shopcart = Shopcart.find_by_id(customer_id)
     if not shopcart:
-        raise NotFound("ShopCart with id '{}' was not found.".format(shopcart_id))
+        raise NotFound("ShopCart with id '{}' was not found.".format(customer_id))
     shopcart.deserialize(request.get_json())
-    shopcart.id = shopcart_id
     shopcart.update()
-    app.logger.info("Pet with ID [%s] updated.", shopcart.id)
+    app.logger.info("Shopcart with ID [%s] updated.", shopcart.id)
     return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
 
-
+######################################################################
 # DELETING A SHOPCART
 ######################################################################
 @app.route("/shopcarts/<customer_id>", methods=["DELETE"])

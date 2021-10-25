@@ -63,3 +63,27 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(shopcart.quantity, fake_shopcart.quantity)
         # self.assertTrue(True)
 
+    def test_update_a_shopcart(self):
+        """Update a Shopcart"""
+        shopcart = ShopcartFactory()
+        logging.debug(shopcart)
+        shopcart.create()
+        logging.debug(shopcart)
+        self.assertEqual(shopcart.id, 1)
+        # Change it an save it
+        shopcart.quantity=3
+        original_id = shopcart.id
+        shopcart.update()
+        self.assertEqual(shopcart.id, original_id)
+        self.assertEqual(shopcart.quantity, 3)
+        # Fetch it back and make sure the id hasn't changed
+        # but the data did change
+        shopcarts = Shopcart.all()
+        self.assertEqual(len(shopcarts), 1)
+        self.assertEqual(shopcarts[0].id, 1)
+        self.assertEqual(shopcart.quantity, 3)
+
+
+
+
+
