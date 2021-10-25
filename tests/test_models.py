@@ -10,7 +10,7 @@ from tests.factories import ShopcartFactory
 from services import app
 
 DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/testdb"
+    "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
 )
 
 ######################################################################

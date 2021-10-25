@@ -26,7 +26,7 @@ class ShopcartFactory(factory.Factory):
     class Meta:
         model = Shopcart
 
-    id = factory.Sequence(lambda n: n)
+    id = None
     product_id = FuzzyChoice(choices=[1001,2002,3003,4747,9999])
     quantity = FuzzyInteger(0, 10, step=1)
     customer_id = FuzzyChoice(choices=[1000,2000,3000,8000])
