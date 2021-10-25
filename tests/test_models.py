@@ -118,7 +118,7 @@ class TestShopcart(unittest.TestCase):
         shopcart = Shopcart()
         shopcart.deserialize(data)
         self.assertNotEqual(shopcart, None)
-        self.assertEqual(shopcart.id, None)
+        self.assertEqual(shopcart.id, data['id'])
         self.assertEqual(shopcart.customer_id, 123)
         self.assertEqual(shopcart.product_id, 321)
         self.assertEqual(shopcart.quantity, 2)
