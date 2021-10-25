@@ -17,7 +17,7 @@ DATABASE_URI = os.getenv(
 #  S H O P C A R T   M O D E L   T E S T   C A S E S
 ######################################################################
 class TestShopcart(unittest.TestCase):
-    """ Test Cases for YourResourceModel Model """
+    """ Test Cases for Shopcart Model """
 
     @classmethod
     def setUpClass(cls):
@@ -49,7 +49,7 @@ class TestShopcart(unittest.TestCase):
     ######################################################################
 
     def test_create_shopcart(self):
-        """ Test something """
+        """ Test create shopcart """
         fake_shopcart = ShopcartFactory()
         shopcart = Shopcart(
             customer_id = fake_shopcart.customer_id,
@@ -94,7 +94,7 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(len(fake_shopcart.all()), 0)
 
     def test_serialize_shopcart(self):
-        """ Test serialization of a Pet """
+        """ Test serialization of a Shopcart """
         shopcart = ShopcartFactory()
         data = shopcart.serialize()
         self.assertNotEqual(data, None)
@@ -108,7 +108,7 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(data["quantity"], shopcart.quantity)
 
     def test_deserialize_shopcart(self):
-        """ Test deserialization of a Pet """
+        """ Test deserialization of a Shopcart """
         data = {
             "id": 1,
             "customer_id": 123,
