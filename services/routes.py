@@ -51,12 +51,11 @@ def create_shopcart():
     check_content_type("application/json")
     shopcart = Shopcart()
     shopcart.deserialize(request.get_json())
-    check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
+    # check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
     # check if the database already has the entry. if so, abort creating and use the update instead
-    if check_shopcart:
-        app.logger.info("Resource already been created")
-        message = {"error": "Shopcart for customer ID [%s] has already been created. Please use update instead"}
-        return make_response(jsonify(message), status.HTTP_400_BAD_REQUEST)
+    # if check_shopcart:
+        # app.logger.info("Resource already been created, update it")
+        # check_shopcart.delete()
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
@@ -119,10 +118,12 @@ def update_shopcarts(customer_id, product_id):
     shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
     if not shopcart:
         raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
-    shopcart.deserialize(request.get_json())
-    shopcart.update()
-    app.logger.info("Shopcart with custoemr_id [%s] updated.", shopcart.customer_id)
-    return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
+    logging.debug(shopcart)
+    new_shopcart = shopcart[0]
+    new_shopcart.deserialize(request.get_json())
+    new_shopcart.update()
+    app.logger.info("Shopcart with custoemr_id [%s] updated.", new_shopcart.customer_id)
+    return make_response(jsonify(new_shopcart.serialize()), status.HTTP_200_OK)
 
 ######################################################################
 # DELETING A SHOPCART
