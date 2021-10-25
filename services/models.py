@@ -1,5 +1,5 @@
 """
-Models for YourResourceModel
+Models for shopcart
 
 All of the models are stored in this module
 
@@ -30,7 +30,7 @@ class DataValidationError(Exception):
 
 class Shopcart(db.Model):
     """
-    Class that represents a <your resource model name>
+    Class that represents a shopcart
     """
     app = None
 
@@ -41,11 +41,11 @@ class Shopcart(db.Model):
     quantity = db.Column(db.Integer)
 
     def __repr__(self):
-        return "<YourResourceModel %r id=[%s]>" % (self.name, self.id)
+        return "<shopcart id=[%s]>" % (self.id)
 
     def create(self):
         """
-        Creates a YourResourceModel to the database
+        Creates a shopcart to the database
         """
         logger.info("Creating %s", self.id)
         self.id = None  # id must be none to generate next primary key
@@ -62,13 +62,13 @@ class Shopcart(db.Model):
         db.session.commit()
 
     def delete(self):
-        """ Removes a YourResourceModel from the data store """
+        """ Removes a shopcart from the data store """
         logger.info("Deleting %s", self.id)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
-        """ Serializes a YourResourceModel into a dictionary """
+        """ Serializes a shopcart into a dictionary """
         return {
             "id": self.id,
             "product_id": self.product_id,
@@ -79,7 +79,7 @@ class Shopcart(db.Model):
 
     def deserialize(self, data):
         """
-        Deserializes a YourResourceModel from a dictionary
+        Deserializes a shopcart from a dictionary
 
         Args:
             data (dict): A dictionary containing the resource data
@@ -91,11 +91,11 @@ class Shopcart(db.Model):
             self.quantity = data["quantity"]
         except KeyError as error:
             raise DataValidationError(
-                "Invalid YourResourceModel: missing " + error.args[0]
+                "Invalid shopcart: missing " + error.args[0]
             )
         except TypeError as error:
             raise DataValidationError(
-                "Invalid YourResourceModel: body of request contained bad or no data"
+                "Invalid shopcart: body of request contained bad or no data"
             )
         return self
 
@@ -116,27 +116,22 @@ class Shopcart(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_id(cls, shopcart_id):
-        """Finds a Shopcart by it's ID
-        :param shopcart_id: the id of the Shopcart to find
-        :type shopcart_id: int
-        :return: an instance with the shopcart_id, or None if not found
-        :rtype: Shopcart
-        """
-        logger.info("Processing lookup for id %s ...", shopcart_id)
-        return cls.query.get(shopcart_id)
+    def find_by_id(cls, by_id):
+        """ Finds a shopcart by it's ID """
+        logger.info("Processing lookup for id %s ...", by_id)
+        return cls.query.get(by_id)
 
     @classmethod
     def find_by_customer_id(cls, customer_id):
-        """Returns all YourResourceModels with the given id
+        """Returns the shopcart with the given customer_id
         Args:
-            id (Integer): the id of the YourResourceModels you want to match
+            customer_id (Integer): the customer_id that the shopcart matches
         """
         logger.info("Processing name query for %s ...", customer_id)
-        return cls.query.filter(cls.customer_id == id)
+        return cls.query.filter(cls.customer_id == customer_id)
 
     @classmethod
-    def find_or_404(cls, id):
+    def find_or_404(cls, by_id):
         """ Find a shopcart by it's id """
-        logger.info("Processing lookup or 404 for id %s ...", id)
-        return cls.query.get_or_404(id)
+        logger.info("Processing lookup or 404 for id %s ...", by_id)
+        return cls.query.get_or_404(by_id)

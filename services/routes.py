@@ -40,7 +40,9 @@ def index():
 # CREATE A NEW SHOPCART
 ######################################################################
 @app.route("/shopcarts", methods=["POST"])
-def create_shopcarts():
+
+def create_shopcart():
+
     """
     Creates a shopcart
     """
@@ -52,14 +54,36 @@ def create_shopcarts():
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
-    app.logger.info("Shorpcart for customer ID [%s] created.", shopcart.customer_id)
+    app.logger.info("Shopcart for customer ID [%s] created.", shopcart.customer_id)
 
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
+######################################################################
+# READING A SHOPCART
+######################################################################
+@app.route("/shopcarts/<customer_id>", methods=["GET"])
+def read_shopcart(customer_id):
+    """
+    Reads a shopcart
+    """
+    app.logger.info("Request to read a shopcart for customer " + customer_id)
+    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+    if not shopcarts:
+        message = {"error": "Shopcart for the customer does not exist!"}
+        return make_response(
+        jsonify(message), status.HTTP_404_NOT_FOUND
+    )
+    message = [shopcart.serialize() for shopcart in shopcarts]
+    location_url = url_for("read_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
+    
+    return make_response(
+        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+    )
 
 ######################################################################
+
 # LIST ALL SHOPCARTS
 ######################################################################
 @app.route("/shopcarts", methods=["GET"])
@@ -95,6 +119,31 @@ def update_shopcarts(shopcart_id):
     shopcart.update()
     app.logger.info("Pet with ID [%s] updated.", shopcart.id)
     return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
+
+=======
+# DELETING A SHOPCART
+######################################################################
+@app.route("/shopcarts/<customer_id>", methods=["DELETE"])
+def delete_shopcart(customer_id):
+    """
+    Delete a shopcart
+    """
+    app.logger.info("Request to delete a shopcart for customer " + customer_id)
+    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+
+    message = [shopcart.serialize() for shopcart in shopcarts]
+    
+    for shopcart in shopcarts:
+        shopcart.delete()
+    
+    location_url = url_for("delete_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
+    
+    return make_response(
+        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+    )
+    
+
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

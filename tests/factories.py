@@ -16,18 +16,22 @@
 Test Factory to make fake objects for testing
 """
 import factory
-from factory.fuzzy import FuzzyChoice
-from service.models import Pet, Gender
+from factory.fuzzy import FuzzyChoice, FuzzyInteger
+from services.models import Shopcart
 
 
-class PetFactory(factory.Factory):
+class ShopcartFactory(factory.Factory):
     """ Creates fake pets that you don't have to feed """
 
     class Meta:
-        model = Pet
+        model = Shopcart
 
     id = factory.Sequence(lambda n: n)
-    name = factory.Faker("first_name")
-    category = FuzzyChoice(choices=["dog", "cat", "bird", "fish"])
-    available = FuzzyChoice(choices=[True, False])
-    gender = FuzzyChoice(choices=[Gender.Male, Gender.Female, Gender.Unknown])
+    product_id = FuzzyChoice(choices=[1001,2002,3003,4747,9999])
+    quantity = FuzzyInteger(0, 10, step=1)
+    customer_id = FuzzyChoice(choices=[1000,2000,3000,8000])
+
+
+
+
+
