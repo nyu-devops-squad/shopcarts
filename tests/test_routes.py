@@ -58,7 +58,7 @@ class TestShopcartServer(TestCase):
 
     def _create_shopcart(self, count):
         """Factory method to create shopcart"""
-        shopcarts = []
+        shopcarts = {}
         for _ in range(count):
             test_shopcart = ShopcartFactory()
             resp = self.app.post(BASE_URL, json=test_shopcart.serialize(), content_type="application/json")
@@ -67,8 +67,11 @@ class TestShopcartServer(TestCase):
             )
             new_shopcart = resp.get_json()
             test_shopcart.id = new_shopcart["id"]
-            shopcarts.append(test_shopcart)
-        return shopcarts
+
+            key = "_".join([str(new_shopcart['customer_id']), str(new_shopcart['product_id'])])
+            shopcarts[key] = test_shopcart
+
+        return list(shopcarts.values())
 
 
     ######################################################################
@@ -132,11 +135,11 @@ class TestShopcartServer(TestCase):
         self.assertEqual(updated_shopcart["quantity"], 3)
 
     def test_list_shopcarts(self):
-        self._create_shopcart(5)
-        repr = self.app.get(BASE_URL)
-        self.assertEqual(repr.status_code, status.HTTP_200_OK)
-        data = repr.get_json()
-        self.assertEqual(len(data),5)
+        created_data = self._create_shopcart(5)
+        resp = self.app.get(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(created_data))
 
     def test_read_shopcart(self):
         """Read an existing shopcart"""
