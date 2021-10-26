@@ -135,3 +135,9 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(shopcart.product_id, 231)
         self.assertEqual(shopcart.id, 1)
         self.assertEqual(shopcart.customer_id, 123)
+
+    def test_deserialize_bad_data(self):
+        """ Test deserialization of bad data """
+        data = "this is not a dictionary"
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
