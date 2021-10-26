@@ -67,7 +67,7 @@ class TestShopcartServer(TestCase):
             )
             new_shopcart = resp.get_json()
             test_shopcart.id = new_shopcart["id"]
-            
+
             key = "_".join([str(new_shopcart['customer_id']), str(new_shopcart['product_id'])])
             shopcarts[key] = test_shopcart
 
@@ -136,7 +136,6 @@ class TestShopcartServer(TestCase):
 
     def test_list_shopcarts(self):
         created_data = self._create_shopcart(5)
-        print(len(created_data))
         resp = self.app.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
