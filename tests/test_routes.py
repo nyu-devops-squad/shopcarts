@@ -171,3 +171,8 @@ class TestShopcartServer(TestCase):
             "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_shopcart_no_content_type(self):
+        """ Create a shopcart item with no content type """
+        resp = self.app.post(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
