@@ -8,6 +8,7 @@ import os
 from services.models import Shopcart, DataValidationError, db
 from tests.factories import ShopcartFactory
 from services import app
+from werkzeug.exceptions import NotFound
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
@@ -122,3 +123,21 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(shopcart.customer_id, 123)
         self.assertEqual(shopcart.product_id, 321)
         self.assertEqual(shopcart.quantity, 2)
+
+    def test_find_or_404_not_found(self):
+        """ Find or return 404 NOT found """
+        self.assertRaises(NotFound, Shopcart.find_or_404, 0)
+
+    def test_find_by_id(self):
+        Shopcart(id=1, customer_id=123, product_id=231, quantity=1).create()
+        Shopcart(id=2, customer_id=124, product_id=232, quantity=1).create()
+        shopcart = Shopcart.find_by_id(1)
+        self.assertEqual(shopcart.product_id, 231)
+        self.assertEqual(shopcart.id, 1)
+        self.assertEqual(shopcart.customer_id, 123)
+
+    def test_deserialize_bad_data(self):
+        """ Test deserialization of bad data """
+        data = "this is not a dictionary"
+        shopcart = Shopcart()
+        self.assertRaises(DataValidationError, shopcart.deserialize, data)
