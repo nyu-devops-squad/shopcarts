@@ -126,7 +126,7 @@ class TestShopcartServer(TestCase):
         logging.debug(new_shopcart)
         new_shopcart["quantity"] = 3
         resp = self.app.put(
-            "{0}/{1}/{2}".format(BASE_URL, new_shopcart["customer_id"], new_shopcart["product_id"]),
+            "shopcarts/{0}/products/{1}".format(new_shopcart["customer_id"],new_shopcart["product_id"]),
             json=new_shopcart,
             content_type="application/json",
         )
