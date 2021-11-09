@@ -108,7 +108,7 @@ def list_shopcarts():
 ######################################################################
 # UPDATE A SHOPCART 
 ######################################################################
-@app.route("/shopcarts/<int:customer_id>/<int:product_id>", methods=["PUT"])
+@app.route("/shopcarts/<int:customer_id>/products/<int:product_id>", methods=["PUT"])
 def update_shopcarts(customer_id, product_id):
     """
     Update the quantity of an item in a Shopcart
