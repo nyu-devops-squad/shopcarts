@@ -10,7 +10,7 @@ import logging
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from services import status  # HTTP Status Codes
-from services.models import db
+from services.models import db,DataValidationError
 from services.routes import app, init_db
 from .factories import ShopcartFactory
 
@@ -176,3 +176,23 @@ class TestShopcartServer(TestCase):
         """ Create a shopcart item with no content type """
         resp = self.app.post(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_get_shopcart_not_found(self):
+        """Get a Shopcart thats not found"""
+        resp = self.app.get("/shopcarts/100")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_method_not_allowed(self):
+        """ Test method not allowed """
+        resp = self.app.put(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    @patch('services.routes.Shopcart.find_by_customer_id')
+    def test_bad_request(self, bad_request_mock):
+        """ Test a Bad Request error from Find By customer_id """
+        bad_request_mock.side_effect = DataValidationError()
+        resp = self.app.get("/shopcarts/1000")
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    
