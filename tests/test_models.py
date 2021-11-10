@@ -94,6 +94,7 @@ class TestShopcart(unittest.TestCase):
         fake_shopcart.delete()
         self.assertEqual(len(fake_shopcart.all()), 0)
 
+
     def test_serialize_shopcart(self):
         """ Test serialization of a Shopcart """
         shopcart = ShopcartFactory()

@@ -89,7 +89,6 @@ def read_shopcart(customer_id):
     )
 
 ######################################################################
-
 # LIST ALL SHOPCARTS
 ######################################################################
 @app.route("/shopcarts", methods=["GET"])
@@ -148,7 +147,44 @@ def delete_shopcart(customer_id):
         jsonify(message), status.HTTP_200_OK, {"Location": location_url}
     )
     
+######################################################################
+# READ A PRODUCT FROM THE SHOPCART
+######################################################################
+@app.route("/shopcarts/<int:customer_id>/products/<int:product_id>", methods=["GET"])
+def read_product(customer_id,product_id):
+    """
+    Read a product from a shopcart
+    """
+    app.logger.info("Request to get a product from {}'s shopcart. ".format(customer_id))
+    product = Shopcart.find_by_shopcart_item(customer_id,product_id).all()
+    if not product:
+        message = {"error": "The product does not exist!"}
+        return make_response(
+        jsonify(message), status.HTTP_404_NOT_FOUND
+    )
+    target_product = product[0]
+    app.logger.info("Returning product with id: %s", product_id)
+    return make_response(
+        jsonify(target_product.serialize()), status.HTTP_200_OK
+    )
 
+######################################################################
+# DELETE A PRODUCT FROM THE SHOPCART
+######################################################################
+@app.route("/shopcarts/<int:customer_id>/products/<int:product_id>", methods=["DELETE"])
+def delete_product(customer_id,product_id):
+    """
+    Delete a product from a shopcart
+    """
+    app.logger.info("Request to delete a product from {}'s shopcart. ".format(customer_id))
+    product = Shopcart.find_by_shopcart_item(customer_id,product_id)
+    if product:
+        product.delete()
+
+    app.logger.info("Product with id {} in {}'s shopcart delete completely".format(product_id,customer_id))
+    return make_response(
+        "", status.HTTP_204_NO_CONTENT
+    )
 
 
 ######################################################################
