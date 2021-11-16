@@ -40,9 +40,8 @@ def index():
 ######################################################################
 # CREATE A NEW SHOPCART
 ######################################################################
-@app.route("/shopcarts", methods=["POST"])
-
-def create_shopcart():
+@app.route("/shopcarts/<int:customer_id>/products/", methods=["POST"])
+def create_shopcart(customer_id):
 
     """
     Creates a shopcart
@@ -56,10 +55,9 @@ def create_shopcart():
     if check_shopcart:
         app.logger.info("Resource already been created, update it")
         check_shopcart.delete()
-        
     shopcart.create()
     message = shopcart.serialize()
-    location_url = url_for("create_shopcart", id=shopcart.id, _external=True)
+    location_url = url_for("create_shopcart", id=shopcart.id, customer_id=shopcart.customer_id,_external=True)
     app.logger.info("Shopcart for customer ID [%s] created.", shopcart.customer_id)
 
     return make_response(
