@@ -1,5 +1,7 @@
 # shopcarts
 
+[![codecov](https://codecov.io/gh/nyu-devops-squad/shopcarts/branch/main/graph/badge.svg?token=HE22505N7V)](https://codecov.io/gh/nyu-devops-squad/shopcarts)
+
 To run the flask app -  
 ``` 
     vagrant up
