@@ -61,7 +61,10 @@ class TestShopcartServer(TestCase):
         shopcarts = {}
         for _ in range(count):
             test_shopcart = ShopcartFactory()
-            resp = self.app.post(BASE_URL, json=test_shopcart.serialize(), content_type="application/json")
+            resp = self.app.post(
+                "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
+                json=test_shopcart.serialize(), content_type="application/json"
+                )
             self.assertEqual(
                 resp.status_code, status.HTTP_201_CREATED, "Could not create test shopcart"
             )
@@ -87,7 +90,8 @@ class TestShopcartServer(TestCase):
         """Create a new Shopcart"""
         test_shopcart = ShopcartFactory()
         logging.debug(test_shopcart)
-        resp = self.app.post(BASE_URL, json=test_shopcart.serialize(), content_type="application/json")
+        resp = self.app.post("shopcarts/{0}/products/".format(test_shopcart.customer_id), 
+                            json=test_shopcart.serialize(), content_type="application/json")
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)   
         # if resp.status_code == status.HTTP_201_CREATED:
         # Make sure location header is set
@@ -118,7 +122,8 @@ class TestShopcartServer(TestCase):
         # create a shopcart to update
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
-            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+            "shopcarts/{0}/products/".format(test_shopcart.customer_id),
+            json=test_shopcart.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)        
         # update the shopcart
@@ -153,7 +158,8 @@ class TestShopcartServer(TestCase):
         """Delete an existing shopcart"""
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
-            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
+            json=test_shopcart.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -184,7 +190,7 @@ class TestShopcartServer(TestCase):
         """Read a product form a shopcart that not exist"""
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
-            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), json=test_shopcart.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -199,7 +205,8 @@ class TestShopcartServer(TestCase):
         """Delete a Product"""
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
-            BASE_URL, json=test_shopcart.serialize(), content_type="application/json"
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
+            json=test_shopcart.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
 
@@ -216,13 +223,11 @@ class TestShopcartServer(TestCase):
             "shopcarts/{0}/products/{1}".format(test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
-
    
-
     def test_create_shopcart_no_content_type(self):
         """ Create a shopcart item with no content type """
-        resp = self.app.post(BASE_URL)
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post("{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id))
         self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     def test_get_shopcart_not_found(self):
