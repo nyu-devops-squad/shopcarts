@@ -8,9 +8,10 @@ Models
 Shopcart
 Attributes:
 -----------
-id - (integer) auto increment
 product_id - (TBD) from the product API
 customer_id - (TBD) from the customer API
+product_name - (TBD) from the product API
+product_price - (TBD) from the product API
 quantity - (integer) quantity of the items
 """
 
@@ -35,20 +36,20 @@ class Shopcart(db.Model):
     app = None
 
     # Table Schema
-    id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer)
-    customer_id = db.Column(db.Integer)
+    product_id = db.Column(db.Integer, primary_key=True)
+    customer_id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String(64), nullable=False)
+    product_price = db.Column(db.Float, nullable=False)
     quantity = db.Column(db.Integer)
 
     def __repr__(self):
-        return "<shopcart id=[%s]>" % (self.id)
+        return "<customer id=[%s]>,<product id=[%s]>" % (self.customer_id,self.product_id)
 
     def create(self):
         """
         Creates a shopcart to the database
         """
-        logger.info("Creating %s", self.id)
-        self.id = None  # id must be none to generate next primary key
+        logger.info("Creating customer_id: %s, product_id：%s", self.customer_id,self.product_id)
         db.session.add(self)
         db.session.commit()
 
@@ -63,16 +64,17 @@ class Shopcart(db.Model):
 
     def delete(self):
         """ Removes a shopcart from the data store """
-        logger.info("Deleting %s", self.id)
+        logger.info("Deleting %s,%s", self.customer_id,self.product_id)
         db.session.delete(self)
         db.session.commit()
 
     def serialize(self):
         """ Serializes a shopcart into a dictionary """
         return {
-            "id": self.id,
             "product_id": self.product_id,
             "customer_id": self.customer_id,
+            "product_name": self.product_name,
+            "product_price": self.product_price,
             "quantity":self.quantity
         }
 
@@ -85,10 +87,16 @@ class Shopcart(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.id = data["id"]
             self.product_id = data["product_id"]
             self.customer_id = data["customer_id"]
+            self.product_price = data["product_price"]
             self.quantity = data["quantity"]
+
+            if isinstance(data["product_name"], str):
+                self.product_name = data["product_name"]
+            else:
+                raise DataValidationError("Invalid type for string [product_name]: " + type(data["product_name"]))
+
         except KeyError as error:
             raise DataValidationError(
                 "Invalid shopcart: missing " + error.args[0]
@@ -116,12 +124,6 @@ class Shopcart(db.Model):
         return cls.query.all()
 
     @classmethod
-    def find_by_id(cls, by_id):
-        """ Finds a shopcart by it's ID """
-        logger.info("Processing lookup for id %s ...", by_id)
-        return cls.query.get(by_id)
-
-    @classmethod
     def find_by_customer_id(cls, customer_id):
         """Returns the shopcart with the given customer_id
         Args:
@@ -131,10 +133,10 @@ class Shopcart(db.Model):
         return cls.query.filter(cls.customer_id == customer_id)
 
     @classmethod
-    def find_or_404(cls, by_id):
-        """ Find a shopcart by it's id """
-        logger.info("Processing lookup or 404 for id %s ...", by_id)
-        return cls.query.get_or_404(by_id)
+    def find_or_404(cls, product_id,customer_id):
+        """ Find a shopcart by it's compound key """
+        logger.info("Processing lookup or 404 for customer %s with product %s ...", customer_id,product_id)
+        return cls.query.get_or_404((product_id,customer_id))
 
     @classmethod
     def find_by_shopcart_item(cls, customer_id, product_id):
@@ -145,5 +147,5 @@ class Shopcart(db.Model):
             product_id (Integer)
         """
         logger.info("Processing query for costomer_id: %s ...", customer_id)
-        return cls.query.filter(cls.customer_id == customer_id, cls.product_id == product_id)
+        return cls.query.get((product_id,customer_id ))
 

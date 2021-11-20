@@ -38,27 +38,22 @@ def index():
     )
 
 ######################################################################
-# CREATE A NEW SHOPCART
+# ADD A PRODUCT
 ######################################################################
 @app.route("/shopcarts/<int:customer_id>/products/", methods=["POST"])
 def create_shopcart(customer_id):
 
     """
-    Creates a shopcart
+    Add a product into the shopcart
     """
-    app.logger.info("Request to create a shopcart")
+    app.logger.info("Request to add a product into the shopcart")
     check_content_type("application/json")
     shopcart = Shopcart()
     shopcart.deserialize(request.get_json())
-    check_shopcart = Shopcart.find_by_shopcart_item(shopcart.customer_id, shopcart.product_id)
-    # check if the database already has the entry. if so, abort creating and use the update instead
-    if check_shopcart:
-        app.logger.info("Resource already been created, update it")
-        check_shopcart.delete()
     shopcart.create()
     message = shopcart.serialize()
-    location_url = url_for("create_shopcart", id=shopcart.id, customer_id=shopcart.customer_id,_external=True)
-    app.logger.info("Shopcart for customer ID [%s] created.", shopcart.customer_id)
+    location_url = url_for("create_shopcart", customer_id=shopcart.customer_id, product_id=shopcart.product_id,_external=True)
+    app.logger.info("Product with id [%s] added in to the customer: [%s]'s shopcart.",shopcart.product_id, shopcart.customer_id)
 
     return make_response(
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
@@ -80,10 +75,31 @@ def read_shopcart(customer_id):
         jsonify(message), status.HTTP_404_NOT_FOUND
     )
     message = [shopcart.serialize() for shopcart in shopcarts]
-    location_url = url_for("read_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
+    location_url = url_for("read_shopcart", customer_id=customer_id, _external=True)
     
     return make_response(
         jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+    )
+
+######################################################################
+# READ A PRODUCT FROM THE SHOPCART
+######################################################################
+@app.route("/shopcarts/<int:customer_id>/products/<int:product_id>", methods=["GET"])
+def read_product(customer_id,product_id):
+    """
+    Read a product from a shopcart
+    """
+    app.logger.info("Request to get a product from {}'s shopcart. ".format(customer_id))
+    product = Shopcart.find_by_shopcart_item(customer_id,product_id)
+    if not product:
+        message = {"error": "The product does not exist!"}
+        return make_response(
+        jsonify(message), status.HTTP_404_NOT_FOUND
+    )
+    target_product = product[0]
+    app.logger.info("Returning product with id: %s", product_id)
+    return make_response(
+        jsonify(target_product.serialize()), status.HTTP_200_OK
     )
 
 ######################################################################
@@ -117,11 +133,10 @@ def update_shopcarts(customer_id, product_id):
     if not shopcart:
         raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
     logging.debug(shopcart)
-    new_shopcart = shopcart[0]
-    new_shopcart.deserialize(request.get_json())
-    new_shopcart.update()
-    app.logger.info("Shopcart with custoemr_id [%s] updated.", new_shopcart.customer_id)
-    return make_response(jsonify(new_shopcart.serialize()), status.HTTP_200_OK)
+    shopcart.deserialize(request.get_json())
+    shopcart.update()
+    app.logger.info("Shopcart with custoemr_id [%s] updated.", shopcart.customer_id)
+    return make_response(jsonify(shopcart.serialize()), status.HTTP_200_OK)
 
 ######################################################################
 # DELETING A SHOPCART
@@ -139,33 +154,12 @@ def delete_shopcart(customer_id):
     for shopcart in shopcarts:
         shopcart.delete()
     
-    location_url = url_for("delete_shopcart", id=[shopcart.id for shopcart in shopcarts], customer_id=customer_id, _external=True)
+    location_url = url_for("delete_shopcart", customer_id=customer_id, _external=True)
     
     return make_response(
         jsonify(message), status.HTTP_200_OK, {"Location": location_url}
     )
     
-######################################################################
-# READ A PRODUCT FROM THE SHOPCART
-######################################################################
-@app.route("/shopcarts/<int:customer_id>/products/<int:product_id>", methods=["GET"])
-def read_product(customer_id,product_id):
-    """
-    Read a product from a shopcart
-    """
-    app.logger.info("Request to get a product from {}'s shopcart. ".format(customer_id))
-    product = Shopcart.find_by_shopcart_item(customer_id,product_id).all()
-    if not product:
-        message = {"error": "The product does not exist!"}
-        return make_response(
-        jsonify(message), status.HTTP_404_NOT_FOUND
-    )
-    target_product = product[0]
-    app.logger.info("Returning product with id: %s", product_id)
-    return make_response(
-        jsonify(target_product.serialize()), status.HTTP_200_OK
-    )
-
 ######################################################################
 # DELETE A PRODUCT FROM THE SHOPCART
 ######################################################################

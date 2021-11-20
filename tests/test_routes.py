@@ -58,7 +58,7 @@ class TestShopcartServer(TestCase):
 
     def _create_shopcart(self, count):
         """Factory method to create shopcart"""
-        shopcarts = {}
+        shopcarts = []
         for _ in range(count):
             test_shopcart = ShopcartFactory()
             resp = self.app.post(
@@ -69,12 +69,12 @@ class TestShopcartServer(TestCase):
                 resp.status_code, status.HTTP_201_CREATED, "Could not create test shopcart"
             )
             new_shopcart = resp.get_json()
-            test_shopcart.id = new_shopcart["id"]
             
-            key = "_".join([str(new_shopcart['customer_id']), str(new_shopcart['product_id'])])
-            shopcarts[key] = test_shopcart
+            # key = "_".join([str(new_shopcart['customer_id']), str(new_shopcart['product_id'])])
+            # shopcarts[key] = test_shopcart
+            shopcarts.append(test_shopcart)
 
-        return list(shopcarts.values())
+        return shopcarts
 
 
     ######################################################################
@@ -101,6 +101,8 @@ class TestShopcartServer(TestCase):
         new_shopcart = resp.get_json()
         self.assertEqual(new_shopcart["customer_id"], test_shopcart.customer_id, "customer_id does not match")
         self.assertEqual(new_shopcart["product_id"], test_shopcart.product_id, "product_id does not match")
+        self.assertEqual(new_shopcart["product_name"], test_shopcart.product_name, "product_name does not match")
+        self.assertEqual(new_shopcart["product_price"], test_shopcart.product_price, "product_price does not match")
         self.assertEqual(new_shopcart["quantity"],test_shopcart.quantity, "quantity does not match")
         # Check that the location header was correct
         resp = self.app.get(location, content_type="application/json")
@@ -111,6 +113,14 @@ class TestShopcartServer(TestCase):
         self.assertEqual(
             new_shopcart["product_id"], 
             test_shopcart.product_id, "product_id does not match"
+        )
+        self.assertEqual(
+            new_shopcart["product_name"], 
+            test_shopcart.product_name, "product_name does not match"
+        )
+        self.assertEqual(
+            new_shopcart["product_price"], 
+            test_shopcart.product_price, "product_price does not match"
         )
         self.assertEqual(
             new_shopcart["quantity"],
