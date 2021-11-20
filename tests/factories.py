@@ -26,8 +26,8 @@ class ShopcartFactory(factory.Factory):
     class Meta:
         model = Shopcart
 
-    id = None
     product_id = FuzzyChoice(choices=[1001,2002,3003,4747,9999])
-    quantity = FuzzyInteger(0, 10, step=1)
     customer_id = FuzzyChoice(choices=[1000,2000,3000,8000])
-
+    product_name = FuzzyChoice(choices=["a","b","d","c","e"])
+    product_price = FuzzyChoice(choices=[10.01,200.2,30,4747,999])
+    quantity = FuzzyInteger(0, 10, step=1)
