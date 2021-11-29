@@ -22,8 +22,10 @@ To run testing we use -
 #### API calls
 URL | Operation | Description
 -- | -- | --
-`GET /shopcarts/` | LIST | Returns list of all of the shop cart items for all customers
-`GET /shopcarts/<int:customer_id>` | READ | Returns list of all of the shop cart items for a customer
-`POST /shopcarts/<int:customer_id>` | CREATE | Creates a new item entry for the cart
-`PUT /shopcarts/<int:customer_id>/<int:product_id>` | UPDATE | Update particular item quantity
+`GET /shopcarts/` | LIST | Returns list of all of the shopcart items for all customers
+`GET /shopcarts/<int:customer_id>` | READ | Returns list of all of the shopcart items for a customer
+`GET /shopcarts/<int:customer_id>/products/<int:product_id>` | READ | Returns a particular item from a customer's shopcart
+`POST /shopcarts/<int:customer_id>/products` | CREATE | Creates a new item entry for the shopcart
+`PUT /shopcarts/<int:customer_id>/products/<int:product_id>` | UPDATE | Update a particular item quantity
 `DELETE /shopcarts/<int:customer_id>` | DELETE | Delete all shopcart items for a customer
+`DELETE /shopcarts/<int:customer_id>/products/<int:product_id>` | DELETE | Delete a particular item from a customer's shopcart
