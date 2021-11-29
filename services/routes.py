@@ -68,7 +68,11 @@ def read_shopcart(customer_id):
     Reads a shopcart
     """
     app.logger.info("Request to read a shopcart for customer " + customer_id)
-    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+    price_threshold = request.args.get('price')
+    if price_threshold:
+        shopcarts = Shopcart.find_shopcart_items_price(customer_id, price_threshold)
+    else:
+        shopcarts = Shopcart.find_by_customer_id(customer_id).all()
     if not shopcarts:
         message = {"error": "Shopcart for the customer does not exist!"}
         return make_response(
