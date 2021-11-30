@@ -132,6 +132,25 @@ class Shopcart(db.Model):
         logger.info("Processing query for customer %s ...", customer_id)
         return cls.query.filter(cls.customer_id == customer_id)
 
+    @classmethod
+    def find_shopcart_items_price_by_customer_id(cls, customer_id, price_threshold):
+        """Returns the shopcart with the given customer_id
+        Args:
+            customer_id (Integer): the customer_id that the shopcart matches
+            price_threshold (Integer): the price above which we return results
+        """
+        logger.info("Processing query for customer %s ...", customer_id)
+        return cls.query.filter(cls.customer_id == customer_id, cls.product_price >= price_threshold)
+    
+    @classmethod
+    def find_shopcart_items_price(cls, price_threshold):
+        """Returns all shopcart items above a price threshold
+        Args:
+            price_threshold (Integer): the price above which we return results
+        """
+        logger.info("Processing query for price thresold %s ...", price_threshold)
+        return cls.query.filter(cls.product_price >= price_threshold)
+
     # @classmethod
     # def find_or_404(cls, customer_id,product_id):
     #     """ Find a shopcart by it's compound key """

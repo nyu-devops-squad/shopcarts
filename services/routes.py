@@ -68,7 +68,11 @@ def read_shopcart(customer_id):
     Reads a shopcart
     """
     app.logger.info("Request to read a shopcart for customer " + customer_id)
-    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+    price_threshold = request.args.get('price')
+    if price_threshold:
+        shopcarts = Shopcart.find_shopcart_items_price_by_customer_id(customer_id, price_threshold)
+    else:
+        shopcarts = Shopcart.find_by_customer_id(customer_id).all()
     if not shopcarts:
         message = {"error": "Shopcart for the customer does not exist!"}
         return make_response(
@@ -111,8 +115,12 @@ def list_shopcarts():
     Return all of the shopcarts
     """
     app.logger.info("Request for shopcarts list")
+    price_threshold = request.args.get('price')
     shopcarts=[]
-    shopcarts=Shopcart.all()
+    if price_threshold:
+        shopcarts = Shopcart.find_shopcart_items_price(price_threshold)
+    else:
+        shopcarts = Shopcart.all()
     results=[shopcart.serialize() for shopcart in shopcarts]
     app.logger.info("Returning %d shopcarts", len(results))
     return make_response(jsonify(results),status.HTTP_200_OK)

@@ -155,3 +155,35 @@ class TestShopcart(unittest.TestCase):
         data = "this is not a dictionary"
         shopcart = Shopcart()
         self.assertRaises(DataValidationError, shopcart.deserialize, data)
+
+    def test_find_shopcart_item_by_price_by_customer_id(self):
+        """ Find Shopcart items above a price for a customer"""
+        Shopcart(customer_id=123, product_id=231, product_name="a",product_price=102.1,quantity=1).create()
+        Shopcart(customer_id=123, product_id=232, product_name="b",product_price=25,quantity=2).create()
+        shopcart = Shopcart.find_shopcart_items_price_by_customer_id(123, 100)[0]
+        self.assertEqual(shopcart.product_id, 231)
+        self.assertEqual(shopcart.customer_id, 123)
+        self.assertEqual(shopcart.product_name, "a")
+        self.assertEqual(shopcart.product_price, 102.1)
+        self.assertEqual(shopcart.quantity, 1)
+    
+    def test_find_shopcart_item_by_price(self):
+        """ Find Shopcart items above a price """
+        Shopcart(customer_id=123, product_id=231, product_name="a",product_price=10.1,quantity=1).create()
+        Shopcart(customer_id=123, product_id=233, product_name="a",product_price=102.1,quantity=1).create()
+        Shopcart(customer_id=121, product_id=232, product_name="b",product_price=106,quantity=2).create()
+        Shopcart(customer_id=121, product_id=234, product_name="b",product_price=10,quantity=2).create()
+        shopcart = Shopcart.find_shopcart_items_price(100)[0]
+        
+        self.assertEqual(shopcart.product_id, 233)
+        self.assertEqual(shopcart.customer_id, 123)
+        self.assertEqual(shopcart.product_name, "a")
+        self.assertEqual(shopcart.product_price, 102.1)
+        self.assertEqual(shopcart.quantity, 1)
+
+        shopcart = Shopcart.find_shopcart_items_price(100)[1]
+        self.assertEqual(shopcart.product_id, 232)
+        self.assertEqual(shopcart.customer_id, 121)
+        self.assertEqual(shopcart.product_name, "b")
+        self.assertEqual(shopcart.product_price, 106)
+        self.assertEqual(shopcart.quantity, 2)

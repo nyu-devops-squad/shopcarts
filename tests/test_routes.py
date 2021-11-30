@@ -256,5 +256,29 @@ class TestShopcartServer(TestCase):
         resp = self.app.get("/shopcarts/1000")
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_read_shopcart_by_price_by_customer_id(self):
+        """Read an existing shopcart with items above a price threshold for a customer"""
+        test_shopcart = self._create_shopcart(15)
+        test_customer_id = test_shopcart[0].customer_id
+        products = []
+        for shopcart_items in test_shopcart:
+            if shopcart_items.customer_id == test_customer_id and shopcart_items.product_price >= 100:
+                products.append(shopcart_items)
 
+        resp = self.app.get("{0}/{1}?price={2}".format(BASE_URL, test_customer_id, 100))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(products))
     
+    def test_read_shopcart_by_price(self):
+        """Read an existing shopcart with items above a price threshold"""
+        test_shopcart = self._create_shopcart(15)
+        products = []
+        for shopcart_items in test_shopcart:
+            if shopcart_items.product_price >= 100:
+                products.append(shopcart_items)
+
+        resp = self.app.get("{0}?price={1}".format(BASE_URL, 100))
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        data = resp.get_json()
+        self.assertEqual(len(data), len(products))
