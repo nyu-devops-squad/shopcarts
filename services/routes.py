@@ -26,16 +26,21 @@ from . import app
 @app.route("/")
 def index():
     """ Root URL response """
+    return app.send_static_file("index.html")  # use GUI
 
-    app.logger.info("Request for Root URL")
-    return (
-        jsonify(
-            name="Shopcarts REST API Service",
-            version="1.0",
-            # paths=url_for("list_shopcarts", _external=True),
-        ),
-        status.HTTP_200_OK,
-    )
+# The old CLI part:
+# def index():
+#     """ Root URL response """
+
+#     app.logger.info("Request for Root URL")
+#     return (
+#         jsonify(
+#             name="Shopcarts REST API Service",
+#             version="1.0",
+#             # paths=url_for("list_shopcarts", _external=True),
+#         ),
+#         status.HTTP_200_OK,
+#     )
 
 ######################################################################
 # ADD A PRODUCT
