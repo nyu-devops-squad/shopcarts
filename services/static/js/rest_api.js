@@ -72,6 +72,33 @@ $(function () {
     // Retrieve a Shopcart
     // (type in customer_id, show all products in the customer's shopcart)
     // ****************************************
+    
+    // ****************************************
+    // Read a product from a shopcart
+    // ****************************************
+    $("#read-a-product-btn").click(function () {
+        var cust_id = $("#customer_id").val();
+        var prod_id = $("#product_id").val();
+        var ajax = $.ajax({
+            type: "GET",
+            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            update_form_data(res)
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
+
 
     // ****************************************
     // Delete a Shopcart
