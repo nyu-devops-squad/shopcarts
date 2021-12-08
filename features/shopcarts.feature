@@ -6,9 +6,9 @@ Feature: The Shopcarts service back-end
 Background: 
      Given the following shopcarts
          | Customer ID | Product ID | Product Name | Product Price | Product Quantity |
-         | 0001        | 1001       | "a"          | 100           | 1                |
-         | 0002        | 1002       | "b"          | 200           | 2                |
-         | 0003        | 1003       | "c"          | 300           | 3                |
+         | 10001        | 1001       | "a"          | 100           | 1                |
+         | 10002        | 1002       | "b"          | 200           | 2                |
+         | 10003        | 1003       | "c"          | 300           | 3                |
 
 Scenario: The server is running
     When I visit the "Home Page"
@@ -17,10 +17,11 @@ Scenario: The server is running
 
 Scenario: Update the quantity of an item in a Shopcart
     When I visit the "Home Page"
-    And I set the "Customer ID" to "0001"
+    And I set the "Customer ID" to "10001"
     And I set the "Product ID" to "1001"
     And I press the "Retrieve" button
-    Then I should see "1001" in the "Product ID" field
+    Then I should see "10001" in the "Customer ID" field
+    And I should see "1001" in the "Product ID" field
     And I should see "a" in the "Product Name" field
     And I should see "100" in the "Product Price" field
     And I should see "1" in the "Product Quantity" field
