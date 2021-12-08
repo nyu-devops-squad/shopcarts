@@ -75,9 +75,12 @@ Vagrant.configure(2) do |config|
     echo "****************************************"
     # Install Python 3 and dev tools 
     apt-get update
-    apt-get install -y git tree wget vim python3-dev python3-pip python3-venv
+    apt-get install -y git tree wget vim python3-dev python3-pip python3-venv python3-selenium
     apt-get -y autoremove
     
+    # Install Chromium Driver
+    apt-get install -y chromium-driver
+
     # Need PostgreSQL development library to compile on arm64
     apt-get install -y libpq-dev
     
