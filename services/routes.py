@@ -197,6 +197,27 @@ def delete_product(customer_id,product_id):
         "", status.HTTP_204_NO_CONTENT
     )
 
+######################################################################
+# ACTION: CUSTOMER CHECKOUT
+######################################################################
+@app.route("/shopcarts/<customer_id>/checkout", methods=["POST"])
+def checkout_customer(customer_id):
+    """
+    Checkout customer
+    """
+    app.logger.info("Request to create a checkout event for customer {0}.".format(customer_id))
+
+    shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+    message = [shopcart.serialize() for shopcart in shopcarts]
+    
+    for shopcart in shopcarts:
+        shopcart.delete()
+    
+    location_url = url_for("checkout_customer", customer_id=customer_id, _external=True)
+    
+    return make_response(
+        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+    )
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
