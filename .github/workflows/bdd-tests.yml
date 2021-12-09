@@ -44,9 +44,9 @@ jobs:
           echo "\n*** CREATING TEST DB ***\n"
           curl -X PUT http://admin:pass@couchdb:5984/test
           echo "\n*** STARTING APPLICATION ***\n"
-          gunicorn --log-level=critical --bind=0.0.0.0:8080 services:app &
+          gunicorn --log-level=critical --bind=0.0.0.0:5000 services:app &
           sleep 5
-          curl -I http://localhost:8080/
+          curl -I http://localhost:5000/
           echo "\n*** SERVER IS RUNNING ***"
         env:
           BINDING_CLOUDANT: '{"username":"admin","password":"pass","host":"couchdb","port":5984,"url":"http://admin:pass@couchdb:5984"}'
