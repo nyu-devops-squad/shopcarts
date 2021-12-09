@@ -135,8 +135,6 @@ $(function () {
 
     });
 
-
-    // ****************************************
     // Delete a Shopcart
     // (type in customer_id, delete all products in the customer's shopcart)
     // ****************************************
@@ -158,6 +156,34 @@ $(function () {
 
         ajax.fail(function(res){
             flash_message("Server error!")
+        });
+    });
+  
+    // ****************************************
+    // Checkout a Customer
+    // (type in customer_id, delete all products in the customer's shopcart)
+    // ****************************************
+    $("#checkout-btn").click(function () {
+        var cust_id = $("#customer_id").val();
+
+        var ajax = $.ajax({
+            type: "POST",
+            url: "/shopcarts/" + cust_id + "/checkout",
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            $("#customer_id").val("");
+            $("#product_id").val("");
+            clear_form_data()
+            flash_message("Checkout Successful for Customer: " + cust_id)
+        });
+
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
         });
     });
 
