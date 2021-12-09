@@ -17,7 +17,7 @@ $(function () {
     function clear_form_data() {
         $("#product_name").val("");
         $("#product_price").val("");
-        $("#product_quantity").val("");
+        $("#product_quantity").val(0);
     }
 
     // Updates the flash message area
@@ -213,7 +213,6 @@ $(function () {
 
     $("#clear-btn").click(function () {
         $("#customer_id").val("");
-        $("#product_id").val("");
         clear_form_data()
     });
 
