@@ -66,7 +66,7 @@ Scenario: Checkout a customer
     And I set the "Customer ID" to "10080"
     And I press the "Checkout" button
     Then "Customer ID" field should be empty
-    Then "Product ID" field should be empty
-    Then "Product Name" field should be empty
-    Then "Product Price" field should be empty
+    And "Product ID" field should be empty
+    And "Product Name" field should be empty
+    And "Product Price" field should be empty
     And I should see the message "Checkout Successful"
