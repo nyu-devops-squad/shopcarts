@@ -135,7 +135,30 @@ $(function () {
 
     });
 
+    // Delete a Shopcart
+    // (type in customer_id, delete all products in the customer's shopcart)
+    // ****************************************
+    $("#delete-btn").click(function () {
 
+        var cust_id = $("#customer_id").val();
+
+        var ajax = $.ajax({
+            type: "DELETE",
+            url: "/shopcarts/" + cust_id,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("The shopcart has been deleted!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
+  
     // ****************************************
     // Checkout a Customer
     // (type in customer_id, delete all products in the customer's shopcart)
@@ -162,13 +185,33 @@ $(function () {
             clear_form_data()
             flash_message(res.responseJSON.message)
         });
-
     });
 
     // ****************************************
     // Delete a Product
     // (type in customer_id & product_id, delete the product in the corresponding shopcart)
     // ****************************************
+    $("#delete-prod-btn").click(function () {
+
+        var cust_id = $("#customer_id").val();
+        var prod_id = $("#product_id").val();
+
+        var ajax = $.ajax({
+            type: "DELETE",
+            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("The product has been deleted!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
 
     // ****************************************
     // Clear the form
