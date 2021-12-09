@@ -282,3 +282,28 @@ class TestShopcartServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(len(data), len(products))
+
+    def test_checkout_customer(self):
+        """Checkout customer"""
+
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post(
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
+            json=test_shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        new_shopcart = resp.get_json()
+        logging.debug(new_shopcart)
+
+        resp = self.app.post(
+            "{0}/{1}/checkout".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(len(resp.data), 0)
+
+        # make sure they are deleted
+        resp = self.app.get(
+            "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
