@@ -167,4 +167,3 @@ class Shopcart(db.Model):
         """
         logger.info("Processing query for customer_id: %s ... and product_id: %s", customer_id, product_id)
         return cls.query.get((customer_id, product_id))
-
