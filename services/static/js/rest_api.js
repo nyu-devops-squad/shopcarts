@@ -107,15 +107,21 @@ $(function () {
     // List shopcarts
     // (type in customer_id, show all products in the particular customer's shopcart)
     // (type in nothing, show all shopcarts)
+    // (type in price optionally to set price threshold)
     // ****************************************
     $("#search-btn").click(function () {
         var cust_id = $("#customer_id").val();
+        var price = $("#product_price").val();
+        
         var url = "";
 
-        if (cust_id !== "")
+        if (cust_id)
             url = "/shopcarts/" + cust_id;
         else
             url = "/shopcarts";
+
+        if (price)
+            url += '?price=' + price
 
         var ajax = $.ajax({
             type: "GET",
