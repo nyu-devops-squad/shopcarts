@@ -65,9 +65,8 @@ Scenario: Checkout a customer
     When I press the "Clear" button
     And I set the "Customer ID" to "10080"
     And I press the "Checkout" button
-    Then I should see "" in the "Customer ID" field
-    And I should see "" in the "Product ID" field
-    And I should see "" in the "Product Name" field
-    And I should see "" in the "Product Price" field
-    And I should see "0" in the "Product Quantity" field
+    Then "Customer ID" field should be empty
+    Then "Product ID" field should be empty
+    Then "Product Name" field should be empty
+    Then "Product Price" field should be empty
     And I should see the message "Checkout Successful"
