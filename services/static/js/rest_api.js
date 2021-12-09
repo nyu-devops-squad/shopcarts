@@ -153,8 +153,9 @@ $(function () {
 
         ajax.done(function(res){
             //alert(res.toSource())
+            $("#customer_id").val("");
             clear_form_data()
-            flash_message("Checkout Successful")
+            flash_message("Checkout Successful for Customer: " + cust_id)
         });
 
         ajax.fail(function(res){

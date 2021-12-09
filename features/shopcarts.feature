@@ -69,4 +69,4 @@ Scenario: Checkout a customer
     And the "Product ID" field should be empty
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
-    And I should see the message "Checkout Successful"
+    And I should see the message "Checkout Successful for Customer: 10080"
