@@ -15,7 +15,6 @@ $(function () {
 
     // Clear all form fields
     function clear_form_data() {
-        $("#product_id").val("");
         $("#product_name").val("");
         $("#product_price").val("");
         $("#product_quantity").val(0);
@@ -154,6 +153,7 @@ $(function () {
         ajax.done(function(res){
             //alert(res.toSource())
             $("#customer_id").val("");
+            $("#product_id").val("");
             clear_form_data()
             flash_message("Checkout Successful for Customer: " + cust_id)
         });
