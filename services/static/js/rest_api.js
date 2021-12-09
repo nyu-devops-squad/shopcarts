@@ -231,6 +231,21 @@ $(function () {
             ajax.done(function(res){
                 //alert(res.toSource())
                 update_form_data(res)
+                $("#search_results").empty();
+                $("#search_results").append('<table class="table-striped"><thead>');
+                var header = '<tr>'
+                header += '<th style="width:22%">Customer ID</th>'
+                header += '<th style="width:22%">Product ID</th>'
+                header += '<th style="width:22%">Product Name</th>'
+                header += '<th style="width:22%">Product Price</th>'
+                header += '<th style="width:22%">Product Quantity</th></tr>'
+                $("#search_results").append(header);
+
+                product = res;
+                var row = "<tr><td>"+product.customer_id+"</td><td>"+product.product_id+"</td><td>"+product.product_name+"</td><td>"+product.product_price+"</td><td>"+product.quantity+"</td></tr>";
+                $("#search_results").append(row);
+                $("#search_results").append('</table>');
+
                 flash_message("Success")
             });
     
@@ -330,10 +345,5 @@ $(function () {
         clear_form_data()
         $("#flash_message").empty();
     });
-
-    // ****************************************
-    // Search for a Product
-    // ****************************************
-
 
 })
