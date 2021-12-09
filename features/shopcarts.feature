@@ -6,9 +6,9 @@ Feature: The Shopcarts service back-end
 Background: 
      Given the following shopcarts
          | Customer ID | Product ID | Product Name | Product Price | Product Quantity |
-         | 10001        | 1001       | "a"          | 100           | 1                |
-         | 10002        | 1002       | "b"          | 200           | 2                |
-         | 10003        | 1003       | "c"          | 300           | 3                |
+         | 10001       | 1001       | "a"          | 100           | 1                |
+         | 10002       | 1002       | "b"          | 200           | 2                |
+         | 10003       | 1003       | "c"          | 300           | 3                |
 
 Scenario: The server is running
     When I visit the "Home Page"
