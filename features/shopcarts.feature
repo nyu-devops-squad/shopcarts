@@ -59,6 +59,33 @@ Scenario: Update the quantity of an item in a Shopcart
     And I press the "Retrieve" button
     Then I should see "4" in the "Product Quantity" field
 
+Scenario: Read a product from a shopcart
+    When I visit the "Home Page"
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1080"
+    And I set the "Product Name" to "chrysanthemum"
+    And I set the "Product Price" to "9"
+    And I set the "Product Quantity" to "2"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1081"
+    And I set the "Product Name" to "chrysant"
+    And I set the "Product Price" to "13"
+    And I set the "Product Quantity" to "1"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I press the "Clear" button
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1081"
+    And I press the "Retrieve" button
+    Then I should see "10080" in the results
+    And I should see "1081" in the results
+    And I should see "chrysant" in the results
+    And I should see "13" in the results
+    And I should not see "1080" in the results
+    And I should see the message "Success"
+
 Scenario: Action - Checkout a customer
     When I visit the "Home Page"
     And I set the "Customer ID" to "10080"
