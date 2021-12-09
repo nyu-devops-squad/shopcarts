@@ -104,9 +104,70 @@ $(function () {
 
 
     // ****************************************
-    // Retrieve a Shopcart
-    // (type in customer_id, show all products in the customer's shopcart)
+    // List shopcarts
+    // (type in customer_id, show all products in the particular customer's shopcart)
+    // (type in nothing, show all shopcarts)
+    // (type in price optionally to set price threshold)
     // ****************************************
+    $("#search-btn").click(function () {
+        var cust_id = $("#customer_id").val();
+        var price = $("#product_price").val();
+        
+        var url = "";
+
+        if (cust_id)
+            url = "/shopcarts/" + cust_id;
+        else
+            url = "/shopcarts";
+
+        if (price)
+            url += '?price=' + price
+
+        var ajax = $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            $("#search_results").empty();
+            $("#search_results").append('<table class="table-striped" cellpadding="10">');
+            var header = '<tr>'
+            header += '<th style="width:10%">CustomerID</th>'
+            header += '<th style="width:40%">ProductID</th>'
+            header += '<th style="width:40%">ProductName</th>'
+            header += '<th style="width:10%">ProductPrice</th>'
+            header += '<th style="width:10%">ProductQuantity</th></tr>'
+
+            $("#search_results").append(header);
+            var firstProduct = "";
+            for(var i = 0; i < res.length; i++) {
+                var product = res[i];
+                var row = "<tr><td>"+product.customer_id+"</td><td>"+product.product_id+"</td><td>"+product.product_name+"</td><td>"+product.product_price+"</td><td>"+product.quantity+"</td></tr>";
+                $("#search_results").append(row);
+                if (i == 0) {
+                    firstProduct = product;
+                }
+            }
+
+            $("#search_results").append('</table>');
+
+            // copy the first result to the form
+            if (firstProduct != "") {
+                update_form_data(firstProduct)
+            }
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
     
     // ****************************************
     // Read a product from a shopcart
@@ -135,7 +196,30 @@ $(function () {
 
     });
 
+    // Delete a Shopcart
+    // (type in customer_id, delete all products in the customer's shopcart)
+    // ****************************************
+    $("#delete-btn").click(function () {
 
+        var cust_id = $("#customer_id").val();
+
+        var ajax = $.ajax({
+            type: "DELETE",
+            url: "/shopcarts/" + cust_id,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("The shopcart has been deleted!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
+  
     // ****************************************
     // Checkout a Customer
     // (type in customer_id, delete all products in the customer's shopcart)
@@ -162,13 +246,33 @@ $(function () {
             clear_form_data()
             flash_message(res.responseJSON.message)
         });
-
     });
 
     // ****************************************
     // Delete a Product
     // (type in customer_id & product_id, delete the product in the corresponding shopcart)
     // ****************************************
+    $("#delete-prod-btn").click(function () {
+
+        var cust_id = $("#customer_id").val();
+        var prod_id = $("#product_id").val();
+
+        var ajax = $.ajax({
+            type: "DELETE",
+            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("The product has been deleted!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
+    });
 
     // ****************************************
     // Clear the form
