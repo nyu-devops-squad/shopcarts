@@ -17,7 +17,7 @@ $(function () {
     function clear_form_data() {
         $("#product_name").val("");
         $("#product_price").val("");
-        $("#product_quantity").val(0);
+        $("#product_quantity").val("");
     }
 
     // Updates the flash message area
@@ -109,6 +109,7 @@ $(function () {
     // (type in nothing, show all shopcarts)
     // (type in price optionally to set price threshold)
     // ****************************************
+
     $("#search-btn").click(function () {
         var cust_id = $("#customer_id").val();
         var price = $("#product_price").val();
@@ -168,6 +169,7 @@ $(function () {
         });
 
     });
+
     
     // ****************************************
     // Read a product from a shopcart
@@ -176,23 +178,67 @@ $(function () {
         var cust_id = $("#customer_id").val();
         var prod_id = $("#product_id").val();
 
-        var ajax = $.ajax({
-            type: "GET",
-            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
-            contentType: "application/json",
-            data: ''
-        })
+        if(prod_id == ''){
+            var ajax = $.ajax({
+                type: "GET",
+                url: "/shopcarts/"+cust_id,
+                contentType:"application/json",
+                data: ''
+            })
+    
+            ajax.done(function(res){
+                //alert(res.toSource())
+                $("#search_results").empty();
+                $("#search_results").append('<table class="table-striped"><thead>');
+                var header = '<tr>'
+                header += '<th style="width:22%">Customer ID</th>'
+                header += '<th style="width:22%">Product ID</th>'
+                header += '<th style="width:22%">Product Name</th>'
+                header += '<th style="width:22%">Product Price</th>'
+                header += '<th style="width:22%">Product Quantity</th></tr>'
+                $("#search_results").append(header);
+                for(var i = 0; i < res.length; i++) {
+                    product = res[i];
+                    var row = "<tr><td>"+product.customer_id+"</td><td>"+product.product_id+"</td><td>"+product.product_name+"</td><td>"+product.product_price+"</td><td>"+product.quantity+"</td></tr>";
+                    $("#search_results").append(row);
+                    if(i==0){
+                        firstProduct = product;
+                    }
+                }
+    
+                $("#search_results").append('</table>');
 
-        ajax.done(function(res){
-            //alert(res.toSource())
-            update_form_data(res)
-            flash_message("Success")
-        });
+                if(firstProduct != ""){
+                    update_form_data(firstProduct)
+                }
+    
+                flash_message("Success")
+            });
+    
+            ajax.fail(function(res){
+                flash_message(res.responseJSON.message)
+            });
+        }
 
-        ajax.fail(function(res){
-            clear_form_data()
-            flash_message(res.responseJSON.message)
-        });
+        else{
+            var ajax = $.ajax({
+                type: "GET",
+                url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+                contentType: "application/json",
+                data: ''
+            })
+    
+            ajax.done(function(res){
+                //alert(res.toSource())
+                update_form_data(res)
+                flash_message("Success")
+            });
+    
+            ajax.fail(function(res){
+                clear_form_data()
+                flash_message(res.responseJSON.message)
+            });
+        }
 
     });
 
@@ -280,7 +326,9 @@ $(function () {
 
     $("#clear-btn").click(function () {
         $("#customer_id").val("");
+        $("#product_id").val("");
         clear_form_data()
+        $("#flash_message").empty();
     });
 
     // ****************************************

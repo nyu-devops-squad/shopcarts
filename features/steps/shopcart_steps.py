@@ -18,7 +18,7 @@ def step_impl(context):
     expect(context.resp.status_code).to_equal(200)
     for shopcart in context.resp.json():
         context.resp = requests.delete(context.base_url + '/shopcarts/' + str(shopcart["customer_id"]), headers=headers)
-        expect(context.resp.status_code).to_equal(200)
+        expect(context.resp.status_code).to_equal(204)
     
     # load the database with new shopcarts
     

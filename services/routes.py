@@ -55,6 +55,12 @@ def create_shopcart(customer_id):
     check_content_type("application/json")
     shopcart = Shopcart()
     shopcart.deserialize(request.get_json())
+    product = shopcart.find_by_shopcart_item(customer_id,shopcart.product_id)
+    if product:
+        message = {"error": "Product already exist!"}
+        return make_response(
+        jsonify(message),status.HTTP_400_BAD_REQUEST
+    )
     shopcart.create()
     message = shopcart.serialize()
     location_url = url_for("create_shopcart", customer_id=shopcart.customer_id, product_id=shopcart.product_id,_external=True)
@@ -170,7 +176,7 @@ def delete_shopcart(customer_id):
     location_url = url_for("delete_shopcart", customer_id=customer_id, _external=True)
     
     return make_response(
-        jsonify(message), status.HTTP_200_OK, {"Location": location_url}
+        jsonify(message), status.HTTP_204_NO_CONTENT, {"Location": location_url}
     )
     
 ######################################################################
