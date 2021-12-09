@@ -115,7 +115,7 @@ Scenario: Query shopcarts for a customer with Price above 10
     And I set the "Product Quantity" to "1"
     And I press the "Create" button
     Then I should see the message "Success"
-    And I set the "Customer ID" to "10081"
+    When I set the "Customer ID" to "10081"
     And I set the "Product ID" to "1081"
     And I set the "Product Name" to "chrysant"
     And I set the "Product Price" to "13"
