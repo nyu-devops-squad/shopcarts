@@ -137,9 +137,31 @@ $(function () {
 
 
     // ****************************************
-    // Delete a Shopcart
+    // Checkout a Customer
     // (type in customer_id, delete all products in the customer's shopcart)
     // ****************************************
+    $("#checkout-btn").click(function () {
+        var cust_id = $("#customer_id").val();
+
+        var ajax = $.ajax({
+            type: "POST",
+            url: "/shopcarts/" + cust_id + "/checkout",
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            clear_form_data()
+            flash_message("Checkout Successful")
+        });
+
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
 
     // ****************************************
     // Delete a Product
