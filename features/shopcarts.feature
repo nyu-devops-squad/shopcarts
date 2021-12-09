@@ -71,7 +71,6 @@ Scenario: Checkout a customer
     And the "Product Price" field should be empty
     And I should see the message "Checkout Successful for Customer: 10080"
 
-
 Scenario: Query shopcarts with Price above 10
     When I visit the "Home Page"
     And I set the "Customer ID" to "10080"
