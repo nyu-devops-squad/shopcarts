@@ -32,6 +32,12 @@ Scenario: Add a product to a customer's shopcart
     And I should see "chrysanthemum" in the "Product Name" field
     And I should see "9" in the "Product Price" field
     And I should see "2" in the "Product Quantity" field
+    And I should see "10080" in the results
+    And I should see "1080" in the results
+    And I should see "chrysanthemum" in the results
+    And I should see "9" in the results
+    And I should see "2" in the results
+    And I should see the message "Success"
 
 Scenario: Update the quantity of an item in a Shopcart
     When I visit the "Home Page"
