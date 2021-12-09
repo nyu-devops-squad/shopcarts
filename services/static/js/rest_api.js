@@ -17,7 +17,7 @@ $(function () {
     function clear_form_data() {
         $("#product_name").val("");
         $("#product_price").val("");
-        $("#product_quantity").val(0);
+        $("#product_quantity").val("");
     }
 
     // Updates the flash message area
@@ -104,9 +104,64 @@ $(function () {
 
 
     // ****************************************
-    // Retrieve a Shopcart
-    // (type in customer_id, show all products in the customer's shopcart)
+    // List shopcarts
+    // (type in customer_id, show all products in the particular customer's shopcart)
+    // (type in nothing, show all shopcarts)
     // ****************************************
+    $("#search-btn").click(function () {
+        var cust_id = $("#customer_id").val();
+        var url = "";
+
+        if (cust_id !== "")
+            url = "/shopcarts/" + cust_id;
+        else
+            url = "/shopcarts";
+
+        var ajax = $.ajax({
+            type: "GET",
+            url: url,
+            contentType: "application/json",
+            data: ''
+        })
+
+        ajax.done(function(res){
+            //alert(res.toSource())
+            $("#search_results").empty();
+            $("#search_results").append('<table class="table-striped" cellpadding="10">');
+            var header = '<tr>'
+            header += '<th style="width:10%">CustomerID</th>'
+            header += '<th style="width:40%">ProductID</th>'
+            header += '<th style="width:40%">ProductName</th>'
+            header += '<th style="width:10%">ProductPrice</th>'
+            header += '<th style="width:10%">ProductQuantity</th></tr>'
+
+            $("#search_results").append(header);
+            var firstProduct = "";
+            for(var i = 0; i < res.length; i++) {
+                var product = res[i];
+                var row = "<tr><td>"+product.customer_id+"</td><td>"+product.product_id+"</td><td>"+product.product_name+"</td><td>"+product.product_price+"</td><td>"+product.quantity+"</td></tr>";
+                $("#search_results").append(row);
+                if (i == 0) {
+                    firstProduct = product;
+                }
+            }
+
+            $("#search_results").append('</table>');
+
+            // copy the first result to the form
+            if (firstProduct != "") {
+                update_form_data(firstProduct)
+            }
+
+            flash_message("Success")
+        });
+
+        ajax.fail(function(res){
+            clear_form_data()
+            flash_message(res.responseJSON.message)
+        });
+
+    });
     
     // ****************************************
     // Read a product from a shopcart
@@ -152,6 +207,7 @@ $(function () {
 
     $("#clear-btn").click(function () {
         $("#customer_id").val("");
+        $("#product_id").val("");
         clear_form_data()
     });
 
