@@ -59,6 +59,59 @@ Scenario: Update the quantity of an item in a Shopcart
     And I press the "Retrieve" button
     Then I should see "4" in the "Product Quantity" field
 
+Scenario: List all shopcarts
+    When I visit the "Home Page"
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1080"
+    And I set the "Product Name" to "chrysanthemum"
+    And I set the "Product Price" to "9"
+    And I set the "Product Quantity" to "2"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1081"
+    And I set the "Product Name" to "chrysant"
+    And I set the "Product Price" to "13"
+    And I set the "Product Quantity" to "1"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see "1081" in the results
+    And I should see "10080" in the results
+    And I should see "chrysant" in the results
+    And I should see "13" in the results
+    And I should see "1080" in the results
+    And I should see "chrysanthemum" in the results
+    And I should see "9" in the results
+    And I should see the message "Success"
+
+Scenario: Read a shopcart
+    When I visit the "Home Page"
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1080"
+    And I set the "Product Name" to "chrysanthemum"
+    And I set the "Product Price" to "9"
+    And I set the "Product Quantity" to "2"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I set the "Customer ID" to "10081"
+    And I set the "Product ID" to "1081"
+    And I set the "Product Name" to "chrysant"
+    And I set the "Product Price" to "13"
+    And I set the "Product Quantity" to "1"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I press the "Clear" button
+    And I set the "Customer ID" to "10080"
+    And I press the "Search" button
+    Then I should see "10080" in the results
+    And I should see "1080" in the results
+    And I should see "chrysanthemum" in the results
+    And I should see "9" in the results
+    And I should not see "10081" in the results
+    And I should see the message "Success"
+
 Scenario: Read a product from a shopcart
     When I visit the "Home Page"
     And I set the "Customer ID" to "10080"
@@ -85,6 +138,26 @@ Scenario: Read a product from a shopcart
     And I should see "13" in the results
     And I should not see "1080" in the results
     And I should see the message "Success"
+
+Scenario: Delete a Product
+    When I visit the "Home Page"
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1080"
+    And I set the "Product Name" to "chrysanthemum"
+    And I set the "Product Price" to "9"
+    And I set the "Product Quantity" to "2"
+    And I press the "Create" button
+    Then I should see the message "Success"
+    When I press the "Clear" button
+    And I set the "Customer ID" to "10080"
+    And I set the "Product ID" to "1080"
+    And I press the "Delete-Prod" button
+    Then I should see "10080" in the "Customer ID" field
+    And I should see "1080" in the "Product ID" field
+    And the "Product Name" field should be empty
+    And the "Product Price" field should be empty
+    And I should see the message "The product has been deleted!"
+
 
 Scenario: Action - Checkout a customer
     When I visit the "Home Page"
