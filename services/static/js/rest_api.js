@@ -75,7 +75,7 @@ $(function () {
 
             var ajax = $.ajax({
                 type: "POST",
-                url: "/shopcarts/" + cust_id + "/products/", // string concat
+                url: "/api/shopcarts/" + cust_id + "/products/", // string concat
                 contentType: "application/json",
                 data: JSON.stringify(data)
             });
@@ -113,7 +113,7 @@ $(function () {
 
         var ajax = $.ajax({
                 type: "PUT",
-                url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+                url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -144,7 +144,7 @@ $(function () {
         var url = "";
 
         if (cust_id)
-            url = "/shopcarts/" + cust_id;
+            url = "/api/shopcarts/" + cust_id;
         else
             url = "/shopcarts";
 
@@ -208,7 +208,7 @@ $(function () {
         if(prod_id == ''){
             var ajax = $.ajax({
                 type: "GET",
-                url: "/shopcarts/"+cust_id,
+                url: "/api/shopcarts/"+cust_id,
                 contentType:"application/json",
                 data: ''
             })
@@ -250,7 +250,7 @@ $(function () {
         else{
             var ajax = $.ajax({
                 type: "GET",
-                url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+                url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
                 contentType: "application/json",
                 data: ''
             })
@@ -293,7 +293,7 @@ $(function () {
 
         var ajax = $.ajax({
             type: "PUT",
-            url: "/shopcarts/" + cust_id + "/checkout",
+            url: "/api/shopcarts/" + cust_id + "/checkout",
             contentType: "application/json",
             data: ''
         })
@@ -333,7 +333,7 @@ $(function () {
 
         var ajax = $.ajax({
             type: "DELETE",
-            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+            url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
             contentType: "application/json",
             data: '',
         })
