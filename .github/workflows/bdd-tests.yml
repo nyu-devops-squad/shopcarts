@@ -47,6 +47,7 @@ jobs:
           - name: Run the server locally
             run: |
               echo "\n*** CREATING TEST DB ***\n"
+              curl -X PUT http://postgres:postgres@postgres:5432/postgres
               echo "\n*** STARTING APPLICATION ***\n"
               gunicorn --log-level=critical --bind=0.0.0.0:5000 services:app &
               sleep 5
