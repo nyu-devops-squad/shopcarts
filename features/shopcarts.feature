@@ -152,8 +152,8 @@ Scenario: Delete a Product
     And I set the "Customer ID" to "10080"
     And I set the "Product ID" to "1080"
     And I press the "Delete-Prod" button
-    Then I should see "10080" in the "Customer ID" field
-    And I should see "1080" in the "Product ID" field
+    Then the "Customer ID" field should be empty
+    And the "Product ID" field should be empty
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
     And I should see the message "The product has been deleted!"
