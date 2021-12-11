@@ -15,6 +15,8 @@ $(function () {
 
     // Clear all form fields
     function clear_form_data() {
+        $("#customer_id").val("");
+        $("#product_id").val("");
         $("#product_name").val("");
         $("#product_price").val("");
         $("#product_quantity").val("");
@@ -281,31 +283,6 @@ $(function () {
         }
 
     });
-
-    // ****************************************
-    // Delete a Shopcart
-    // (type in customer_id, delete all products in the customer's shopcart)
-    // ****************************************
-    $("#delete-btn").click(function () {
-
-        var cust_id = $("#customer_id").val();
-
-        var ajax = $.ajax({
-            type: "DELETE",
-            url: "/shopcarts/" + cust_id,
-            contentType: "application/json",
-            data: '',
-        })
-
-        ajax.done(function(res){
-            clear_form_data()
-            flash_message("The shopcart has been deleted!")
-        });
-
-        ajax.fail(function(res){
-            flash_message("Server error!")
-        });
-    });
   
     // ****************************************
     // Checkout a Customer
@@ -315,7 +292,7 @@ $(function () {
         var cust_id = $("#customer_id").val();
 
         var ajax = $.ajax({
-            type: "POST",
+            type: "PUT",
             url: "/shopcarts/" + cust_id + "/checkout",
             contentType: "application/json",
             data: ''
@@ -323,9 +300,19 @@ $(function () {
 
         ajax.done(function(res){
             //alert(res.toSource())
-            $("#customer_id").val("");
-            $("#product_id").val("");
             clear_form_data()
+
+            $("#search_results").empty();
+            $("#search_results").append('<table class="table-striped"><thead>');
+            var header = '<tr>'
+            header += '<th style="width:22%">Customer ID</th>'
+            header += '<th style="width:22%">Product ID</th>'
+            header += '<th style="width:22%">Product Name</th>'
+            header += '<th style="width:22%">Product Price</th>'
+            header += '<th style="width:22%">Product Quantity</th></tr>'
+            $("#search_results").append(header);
+            $("#search_results").append('</table>');
+
             flash_message("Checkout Successful for Customer: " + cust_id)
         });
 
@@ -366,8 +353,6 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        $("#customer_id").val("");
-        $("#product_id").val("");
         clear_form_data()
         $("#flash_message").empty();
     });

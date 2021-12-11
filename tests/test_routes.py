@@ -307,7 +307,7 @@ class TestShopcartServer(TestCase):
         new_shopcart = resp.get_json()
         logging.debug(new_shopcart)
 
-        resp = self.app.post(
+        resp = self.app.put(
             "{0}/{1}/checkout".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
