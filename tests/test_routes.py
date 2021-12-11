@@ -18,7 +18,7 @@ from .factories import ShopcartFactory
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
 )
-BASE_URL = "/shopcarts"
+BASE_URL = "/api/shopcarts"
 
 ######################################################################
 #  T E S T   C A S E S
@@ -89,22 +89,17 @@ class TestShopcartServer(TestCase):
         """Add a new Product"""
         test_shopcart = ShopcartFactory()
         logging.debug(test_shopcart)
-        resp = self.app.post("shopcarts/{0}/products/".format(test_shopcart.customer_id), 
+        resp = self.app.post("{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
                             json=test_shopcart.serialize(), content_type="application/json")
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)   
-        # if resp.status_code == status.HTTP_201_CREATED:
-        # Make sure location header is set
-        location = resp.headers.get("Location", None)
-        self.assertIsNotNone(location)
-        # Check the data is correct
+
         new_shopcart = resp.get_json()
         self.assertEqual(new_shopcart["customer_id"], test_shopcart.customer_id, "customer_id does not match")
         self.assertEqual(new_shopcart["product_id"], test_shopcart.product_id, "product_id does not match")
         self.assertEqual(new_shopcart["product_name"], test_shopcart.product_name, "product_name does not match")
         self.assertEqual(new_shopcart["product_price"], test_shopcart.product_price, "product_price does not match")
         self.assertEqual(new_shopcart["quantity"],test_shopcart.quantity, "quantity does not match")
-        # Check that the location header was correct
-        resp = self.app.get(location, content_type="application/json")
+
         self.assertEqual(
             new_shopcart["customer_id"], 
             test_shopcart.customer_id, "customer_id does not match"
@@ -130,10 +125,10 @@ class TestShopcartServer(TestCase):
         """Add a new Product that already exists in the shopcart"""
         test_shopcart = ShopcartFactory()
         logging.debug(test_shopcart)
-        resp = self.app.post("shopcarts/{0}/products/".format(test_shopcart.customer_id), 
+        resp = self.app.post("{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
                             json=test_shopcart.serialize(), content_type="application/json")
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        resp = self.app.post("shopcarts/{0}/products/".format(test_shopcart.customer_id), 
+        resp = self.app.post("{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
                             json=test_shopcart.serialize(), content_type="application/json")
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -142,7 +137,7 @@ class TestShopcartServer(TestCase):
         # create a shopcart to update
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
-            "shopcarts/{0}/products/".format(test_shopcart.customer_id),
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id),
             json=test_shopcart.serialize(), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)        
@@ -151,7 +146,7 @@ class TestShopcartServer(TestCase):
         logging.debug(new_shopcart)
         new_shopcart["quantity"] = 3
         resp = self.app.put(
-            "shopcarts/{0}/products/{1}".format(new_shopcart["customer_id"],new_shopcart["product_id"]),
+            "{0}/{1}/products/{2}".format(BASE_URL, new_shopcart["customer_id"],new_shopcart["product_id"]),
             json=new_shopcart,
             content_type="application/json",
         )
@@ -174,34 +169,10 @@ class TestShopcartServer(TestCase):
         data = resp.get_json()
         self.assertEqual(data[0]["product_id"], test_shopcart.product_id)
 
-    def test_delete_shopcart(self):
-        """Delete an existing shopcart"""
-        test_shopcart = ShopcartFactory()
-        resp = self.app.post(
-            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
-            json=test_shopcart.serialize(), content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-
-        new_shopcart = resp.get_json()
-        logging.debug(new_shopcart)
-
-        resp = self.app.delete(
-            "{0}/{1}".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(len(resp.data), 0)
-
-        # make sure they are deleted
-        resp = self.app.get(
-            "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
-        )
-        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_read_product(self):
         """Read a product form a shopcart"""
         test_shopcart = self._create_shopcart(1)[0]
-        resp = self.app.get("/shopcarts/{}/products/{}".format(test_shopcart.customer_id,test_shopcart.product_id))
+        resp = self.app.get("{}/{}/products/{}".format(BASE_URL, test_shopcart.customer_id,test_shopcart.product_id))
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["quantity"], test_shopcart.quantity)
@@ -217,7 +188,7 @@ class TestShopcartServer(TestCase):
         new_shopcart = resp.get_json()
         logging.debug(new_shopcart)
 
-        resp = self.app.get("/shopcarts/{}/products/{}".format(new_shopcart["customer_id"],new_shopcart["product_id"]+1))
+        resp = self.app.get("{}/{}/products/{}".format(BASE_URL, new_shopcart["customer_id"],new_shopcart["product_id"]+1))
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
 
@@ -234,13 +205,13 @@ class TestShopcartServer(TestCase):
         logging.debug(new_shopcart)
 
         resp = self.app.delete(
-            "shopcarts/{0}/products/{1}".format(test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
+            "{0}/{1}/products/{2}".format(BASE_URL, test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(resp.data), 0)
         # make sure they are deleted
         resp = self.app.get(
-            "shopcarts/{0}/products/{1}".format(test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
+            "{0}/{1}/products/{2}".format(BASE_URL, test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
    
@@ -252,7 +223,7 @@ class TestShopcartServer(TestCase):
 
     def test_get_shopcart_not_found(self):
         """Get a Shopcart thats not found"""
-        resp = self.app.get("/shopcarts/0")
+        resp = self.app.get("{}/0".format(BASE_URL))
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_method_not_allowed(self):
@@ -264,7 +235,7 @@ class TestShopcartServer(TestCase):
     def test_bad_request(self, bad_request_mock):
         """ Test a Bad Request error from Find By customer_id """
         bad_request_mock.side_effect = DataValidationError()
-        resp = self.app.get("/shopcarts/1000")
+        resp = self.app.get("{}/1000".format(BASE_URL))
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_read_shopcart_by_price_by_customer_id(self):
