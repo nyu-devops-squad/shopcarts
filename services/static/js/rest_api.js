@@ -38,6 +38,31 @@ $(function () {
             var price = $("#product_price").val();
             var quantity = $("#product_quantity").val();
 
+            if(!cust_id){
+                flash_message("Customer ID can't be empty!")
+                return
+            }
+
+            if(!prod_id){
+                flash_message("Product ID can't be empty!")
+                return
+            }
+
+            if(!name){
+                flash_message("Product Name can't be empty!")
+                return
+            }
+
+            if(!price){
+                flash_message("Product Price can't be empty!")
+                return
+            }
+
+            if(!quantity){
+                flash_message("Product Quantity can't be empty!")
+                return
+            }
+
             var data = {
                 "product_id": prod_id,
                 "customer_id": cust_id,
@@ -55,7 +80,7 @@ $(function () {
 
             ajax.done(function(res) {
                 update_form_data(res)
-                flash_message("Success")
+                flash_message("Create Customer: "+ cust_id + " Success!")
             });
 
             ajax.fail(function(res) {
@@ -93,7 +118,7 @@ $(function () {
 
         ajax.done(function(res){
             update_form_data(res)
-            flash_message("Success")
+            flash_message("Successfully Update!")
         });
 
         ajax.fail(function(res){
@@ -160,7 +185,7 @@ $(function () {
                 update_form_data(firstProduct)
             }
 
-            flash_message("Success")
+            flash_message("Search Success!")
         });
 
         ajax.fail(function(res){
@@ -212,7 +237,7 @@ $(function () {
                     update_form_data(firstProduct)
                 }
     
-                flash_message("Success")
+                flash_message("Successfully Retrieve a shopcart of customer: "+ cust_id)
             });
     
             ajax.fail(function(res){
@@ -246,7 +271,7 @@ $(function () {
                 $("#search_results").append(row);
                 $("#search_results").append('</table>');
 
-                flash_message("Success")
+                flash_message("Successfully Retrieve a prodect of customer: "+ cust_id)
             });
     
             ajax.fail(function(res){
@@ -257,6 +282,7 @@ $(function () {
 
     });
 
+    // ****************************************
     // Delete a Shopcart
     // (type in customer_id, delete all products in the customer's shopcart)
     // ****************************************

@@ -94,7 +94,7 @@ Scenario: Read a shopcart
     And I set the "Product Price" to "9"
     And I set the "Product Quantity" to "2"
     And I press the "Create" button
-    Then I should see the message "Success"
+    Then I should see the message "Create Customer: 10080 Success!"
     When I set the "Customer ID" to "10081"
     And I set the "Product ID" to "1081"
     And I set the "Product Name" to "chrysant"
