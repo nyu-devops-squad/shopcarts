@@ -200,7 +200,7 @@ def delete_product(customer_id,product_id):
 ######################################################################
 # ACTION: CUSTOMER CHECKOUT
 ######################################################################
-@app.route("/shopcarts/<customer_id>/checkout", methods=["POST"])
+@app.route("/shopcarts/<customer_id>/checkout", methods=["PUT"])
 def checkout_customer(customer_id):
     """
     Checkout customer
