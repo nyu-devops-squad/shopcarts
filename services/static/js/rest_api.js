@@ -146,7 +146,7 @@ $(function () {
         if (cust_id)
             url = "/api/shopcarts/" + cust_id;
         else
-            url = "/shopcarts";
+            url = "/api/shopcarts";
 
         if (price)
             url += '?price=' + price
