@@ -49,7 +49,7 @@ jobs:
           curl -I http://localhost:5000/
           echo "\n*** SERVER IS RUNNING ***"
         env:
-          DATABASE_URI: "http://admin:pass@couchdb:5984/test"
+          DATABASE_URI: "couchdb://admin:pass@couchdb:5984/test"
           BINDING_CLOUDANT: '{"username":"admin","password":"pass","host":"couchdb","port":5984,"url":"http://admin:pass@couchdb:5984"}'
 
       - name: Run unit tests with behave
