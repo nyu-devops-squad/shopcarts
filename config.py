@@ -7,9 +7,9 @@ if 'VCAP_SERVICES' in os.environ:
     DATABASE_URI = vcap['user-provided'][0]['credentials']['url']
     print("Using VCAP_SERVICES")  # for debug purpose
 
-DATABASE_URI = os.getenv(
-    "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
-)
+#DATABASE_URI = os.getenv(
+#    "DATABASE_URI", "postgres://postgres:postgres@localhost:5432/postgres"
+#)
 # Configure SQLAlchemy
 SQLALCHEMY_DATABASE_URI = DATABASE_URI
 SQLALCHEMY_TRACK_MODIFICATIONS = False
