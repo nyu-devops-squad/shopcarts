@@ -172,7 +172,7 @@ Scenario: Delete a Shopcart
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
     And the "Product Quantity" field should be empty
-    And I should see the message "The product has been deleted!"
+    And I should see the message "The shopcart has been deleted!"
 
 
 
