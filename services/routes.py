@@ -17,7 +17,7 @@ from werkzeug.exceptions import NotFound
 from flask_sqlalchemy import SQLAlchemy
 from services.models import Shopcart, DataValidationError, DatabaseConnectionError
 
-# Import Flask applicationf
+# Import Flask application
 from . import app
 
 
