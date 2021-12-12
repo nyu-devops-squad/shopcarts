@@ -214,6 +214,30 @@ class TestShopcartServer(TestCase):
             "{0}/{1}/products/{2}".format(BASE_URL, test_shopcart.customer_id,test_shopcart.product_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_shopcart(self):
+        """Delete an existing shopcart"""
+        test_shopcart = ShopcartFactory()
+        resp = self.app.post(
+            "{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id), 
+            json=test_shopcart.serialize(), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        new_shopcart = resp.get_json()
+        logging.debug(new_shopcart)
+
+        resp = self.app.delete(
+            "{0}/{1}".format(BASE_URL, new_shopcart["customer_id"]), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(len(resp.data), 0)
+
+        # make sure they are deleted
+        resp = self.app.get(
+            "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
+        )
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
    
     def test_create_shopcart_no_content_type(self):
         """ Create a shopcart item with no content type """
