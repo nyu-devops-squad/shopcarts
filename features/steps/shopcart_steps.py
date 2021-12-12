@@ -12,7 +12,7 @@ from compare import expect
 @given('the following shopcarts')
 def step_impl(context):
     """ Delete all Shopcarts and load new ones """
-    headers = {'Content-Type': 'application/json'}
+    headers = {'accept': 'application/json'}
     # list all of the shopcarts and delete them one by one
     print(context.base_url + '/api/shopcarts')
     context.resp = requests.get(context.base_url + '/api/shopcarts', headers=headers)
