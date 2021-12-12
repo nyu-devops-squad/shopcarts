@@ -154,7 +154,7 @@ $(function () {
         var ajax = $.ajax({
             type: "GET",
             url: url,
-            contentType: "application/json",
+            Accept: "application/json",
             data: ''
         })
 
@@ -353,7 +353,18 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        clear_form_data()
+        clear_form_data();
+        $("#search_results").empty();
+        $("#search_results").append('<table class="table-striped"><thead>');
+        var header = '<tr>'
+        header += '<th style="width:22%">Customer ID</th>'
+        header += '<th style="width:22%">Product ID</th>'
+        header += '<th style="width:22%">Product Name</th>'
+        header += '<th style="width:22%">Product Price</th>'
+        header += '<th style="width:22%">Product Quantity</th></tr>'
+        $("#search_results").append(header);
+        $("#search_results").append('</table>');
+
         $("#flash_message").empty();
     });
 

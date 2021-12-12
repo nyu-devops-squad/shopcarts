@@ -32,6 +32,5 @@ def step_impl(context):
             }
         create_url = context.base_url + '/api/shopcarts/' + row['Customer ID'] + '/products/'
         payload = json.dumps(data)
-        # headers = {'Content-Type': 'application/json'}
         context.resp = requests.post(create_url, data=payload, headers={'Content-Type': 'application/json'})
         expect(context.resp.status_code).to_equal(201)
