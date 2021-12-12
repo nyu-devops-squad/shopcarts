@@ -28,6 +28,9 @@ class DataValidationError(Exception):
     """ Used for an data validation errors when deserializing """
     pass
 
+class DatabaseConnectionError(Exception):
+    """Custom Exception when database connection fails"""
+    pass
 
 class Shopcart(db.Model):
     """
@@ -77,7 +80,6 @@ class Shopcart(db.Model):
             "product_price": self.product_price,
             "quantity":self.quantity
         }
-
 
     def deserialize(self, data):
         """

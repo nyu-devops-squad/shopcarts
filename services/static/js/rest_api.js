@@ -75,7 +75,7 @@ $(function () {
 
             var ajax = $.ajax({
                 type: "POST",
-                url: "/shopcarts/" + cust_id + "/products/", // string concat
+                url: "/api/shopcarts/" + cust_id + "/products/", // string concat
                 contentType: "application/json",
                 data: JSON.stringify(data)
             });
@@ -113,7 +113,7 @@ $(function () {
 
         var ajax = $.ajax({
                 type: "PUT",
-                url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+                url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
                 contentType: "application/json",
                 data: JSON.stringify(data)
             })
@@ -144,9 +144,9 @@ $(function () {
         var url = "";
 
         if (cust_id)
-            url = "/shopcarts/" + cust_id;
+            url = "/api/shopcarts/" + cust_id;
         else
-            url = "/shopcarts";
+            url = "/api/shopcarts";
 
         if (price)
             url += '?price=' + price
@@ -154,7 +154,7 @@ $(function () {
         var ajax = $.ajax({
             type: "GET",
             url: url,
-            contentType: "application/json",
+            Accept: "application/json",
             data: ''
         })
 
@@ -208,7 +208,7 @@ $(function () {
         if(prod_id == ''){
             var ajax = $.ajax({
                 type: "GET",
-                url: "/shopcarts/"+cust_id,
+                url: "/api/shopcarts/"+cust_id,
                 contentType:"application/json",
                 data: ''
             })
@@ -250,7 +250,7 @@ $(function () {
         else{
             var ajax = $.ajax({
                 type: "GET",
-                url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+                url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
                 contentType: "application/json",
                 data: ''
             })
@@ -293,7 +293,7 @@ $(function () {
 
         var ajax = $.ajax({
             type: "PUT",
-            url: "/shopcarts/" + cust_id + "/checkout",
+            url: "/api/shopcarts/" + cust_id + "/checkout",
             contentType: "application/json",
             data: ''
         })
@@ -333,7 +333,7 @@ $(function () {
 
         var ajax = $.ajax({
             type: "DELETE",
-            url: "/shopcarts/" + cust_id + "/products/" + prod_id,
+            url: "/api/shopcarts/" + cust_id + "/products/" + prod_id,
             contentType: "application/json",
             data: '',
         })
@@ -353,7 +353,18 @@ $(function () {
     // ****************************************
 
     $("#clear-btn").click(function () {
-        clear_form_data()
+        clear_form_data();
+        $("#search_results").empty();
+        $("#search_results").append('<table class="table-striped"><thead>');
+        var header = '<tr>'
+        header += '<th style="width:22%">Customer ID</th>'
+        header += '<th style="width:22%">Product ID</th>'
+        header += '<th style="width:22%">Product Name</th>'
+        header += '<th style="width:22%">Product Price</th>'
+        header += '<th style="width:22%">Product Quantity</th></tr>'
+        $("#search_results").append(header);
+        $("#search_results").append('</table>');
+
         $("#flash_message").empty();
     });
 
