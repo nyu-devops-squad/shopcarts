@@ -82,7 +82,7 @@ $(function () {
 
             ajax.done(function(res) {
                 update_form_data(res)
-                flash_message("Create Customer: "+ cust_id + " Success!")
+                flash_message("Create Customer: ["+ cust_id +"] with product ["+prod_id+ "] Success!")
             });
 
             ajax.fail(function(res) {
@@ -163,11 +163,11 @@ $(function () {
             $("#search_results").empty();
             $("#search_results").append('<table class="table-striped" cellpadding="10">');
             var header = '<tr>'
-            header += '<th style="width:10%">CustomerID</th>'
-            header += '<th style="width:40%">ProductID</th>'
-            header += '<th style="width:40%">ProductName</th>'
-            header += '<th style="width:10%">ProductPrice</th>'
-            header += '<th style="width:10%">ProductQuantity</th></tr>'
+            header += '<th style="width:22%">CustomerID</th>'
+            header += '<th style="width:22%">ProductID</th>'
+            header += '<th style="width:22%">ProductName</th>'
+            header += '<th style="width:22%">ProductPrice</th>'
+            header += '<th style="width:22%">ProductQuantity</th></tr>'
 
             $("#search_results").append(header);
             var firstProduct = "";
@@ -239,7 +239,7 @@ $(function () {
                     update_form_data(firstProduct)
                 }
     
-                flash_message("Successfully Retrieve a shopcart of customer: "+ cust_id)
+                flash_message("Successfully Retrieve a shopcart of customer: ["+ cust_id+"]")
             });
     
             ajax.fail(function(res){
@@ -273,7 +273,7 @@ $(function () {
                 $("#search_results").append(row);
                 $("#search_results").append('</table>');
 
-                flash_message("Successfully Retrieve a prodect of customer: "+ cust_id)
+                flash_message("Successfully Retrieve a prodect of customer: ["+ cust_id+"] with product ["+prod_id+"]")
             });
     
             ajax.fail(function(res){
@@ -282,6 +282,32 @@ $(function () {
             });
         }
 
+    });
+
+
+    // ****************************************
+    // Delete a Shopcart
+    // (type in customer_id, delete all products in the customer's shopcart)
+    // ****************************************
+    $("#delete-btn").click(function () {
+
+        var cust_id = $("#customer_id").val();
+
+        var ajax = $.ajax({
+            type: "DELETE",
+            url: "/api/shopcarts/" + cust_id,
+            contentType: "application/json",
+            data: '',
+        })
+
+        ajax.done(function(res){
+            clear_form_data()
+            flash_message("The shopcart has been deleted!")
+        });
+
+        ajax.fail(function(res){
+            flash_message("Server error!")
+        });
     });
   
     // ****************************************
@@ -321,6 +347,7 @@ $(function () {
             flash_message(res.responseJSON.message)
         });
     });
+
 
     // ****************************************
     // Delete a Product
