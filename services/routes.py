@@ -120,6 +120,26 @@ class ShopcartResource(Resource):
         message = [shopcart.serialize() for shopcart in shopcarts]
         return message, status.HTTP_200_OK
 
+        
+    ######################################################################
+    # DELETE A SHOPCART
+    ######################################################################
+    @api.doc('delete_shopcart')
+    @api.response(204, 'Shopcart deleted')
+    def delete(self,customer_id):
+        """
+        Deletes a customer's shopcart
+        """
+        app.logger.info("Request to delete a shopcart for customer " + customer_id)
+        shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+
+        message = [shopcart.serialize() for shopcart in shopcarts]
+    
+        for shopcart in shopcarts:
+            shopcart.delete()
+        
+        return message, status.HTTP_204_NO_CONTENT
+        
 
 ######################################################################
 #  PATH: /shopcarts
@@ -236,10 +256,9 @@ class ProductCollection(Resource):
     # ADD A PRODUCT
     ######################################################################
     @api.doc('add_product_in_shopcart')
-    @api.response(201, 'Success')
-    @api.response(400, 'Product already exists!')
+    @api.response(400, 'The posted data was not valid')
     @api.expect(shopcart_model)
-    @api.marshal_with(shopcart_model)
+    @api.marshal_with(shopcart_model, code=201)
     def post(self, customer_id):
             """
             Add a product into the shopcart
@@ -270,13 +289,16 @@ class CheckoutResource(Resource):
     ######################################################################
     @api.doc('checkout_customer')
     @api.response(404, 'Customer not found')
-    @api.response(409, 'The Customer is not available for checkout')
     def put(self, customer_id):
         """
         Checkout a customer
         """
         app.logger.info("Request to create a checkout event for customer {0}.".format(customer_id))
         shopcarts = Shopcart.find_by_customer_id(customer_id).all()
+        
+        if not shopcarts:
+            abort(status.HTTP_404_NOT_FOUND, 'Shopcart with id [{}] was not found.'.format(customer_id))
+       
         message = [shopcart.serialize() for shopcart in shopcarts]
         
         for shopcart in shopcarts:
