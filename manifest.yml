@@ -5,8 +5,10 @@ applications:
   path: .
   instances: 1
   memory: 512M
-  routes:
-  - route: devops-21fall-shopcart.us-south.cf.appdomain.cloud
+  # routes:
+  # - route: devops-21fall-shopcart.us-south.cf.appdomain.cloud
+  hostname: devops-21fall-shopcart
+  domain: us-south.cf.appdomain.cloud
   disk_quota: 1024M
   buildpacks: 
   - python_buildpack
