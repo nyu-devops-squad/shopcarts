@@ -126,6 +126,7 @@ class ShopcartResource(Resource):
     ######################################################################
     @api.doc('delete_shopcart')
     @api.response(204, 'Shopcart deleted')
+    @api.marshal_list_with(shopcart_model, code=204)
     def delete(self,customer_id):
         """
         Deletes a customer's shopcart
@@ -219,7 +220,8 @@ class ProductResource(Resource):
         check_content_type("application/json")
         shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
         if not shopcart:
-            raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
+            return {"error": "ShopCart item for customer_id '{}' was not found.".format(customer_id)}, status.HTTP_404_NOT_FOUND
+            # raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
         logging.debug(shopcart)
         shopcart.deserialize(api.payload)
         shopcart.update()
@@ -270,7 +272,7 @@ class ProductCollection(Resource):
             product = shopcart.find_by_shopcart_item(customer_id,shopcart.product_id)
             if product:
                 message = {"error": "Product already exist!"}
-                return message,status.HTTP_400_BAD_REQUEST
+                return message, status.HTTP_400_BAD_REQUEST
             shopcart.create()
             message = shopcart.serialize()
             app.logger.info("Product with id [%s] added in to the customer: [%s]'s shopcart.",shopcart.product_id, shopcart.customer_id)
