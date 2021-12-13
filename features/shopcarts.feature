@@ -17,7 +17,8 @@ Scenario: The server is running
 Scenario: List all shopcarts
     When I visit the "Home Page"
     And I press the "Search" button
-    Then I should see "10001" in the results
+    Then I should see the message "Search Success"
+    And I should see "10001" in the results
     And I should see "1001" in the results
     And I should see "a" in the results
     And I should see "100" in the results
@@ -27,7 +28,6 @@ Scenario: List all shopcarts
     And I should see "b" in the results
     And I should see "200" in the results
     And I should see "2" in the results
-    And I should see the message "Search Success"
 
 Scenario: Add a product to a customer's shopcart
     When I visit the "Home Page"
@@ -39,9 +39,11 @@ Scenario: Add a product to a customer's shopcart
     And I press the "Create" button
     Then I should see the message "Create Customer: [10080] with product [1080] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10080"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10080"
     And I press the "Retrieve" button
-    Then I should see "10080" in the "Customer ID" field
+    Then I should see the message "Successfully Retrieve a shopcart of customer: [10080]"
+    And I should see "10080" in the "Customer ID" field
     And I should see "1080" in the "Product ID" field
     And I should see "chrysanthemum" in the "Product Name" field
     And I should see "9" in the "Product Price" field
@@ -51,14 +53,14 @@ Scenario: Add a product to a customer's shopcart
     And I should see "chrysanthemum" in the results
     And I should see "9" in the results
     And I should see "2" in the results
-    And I should see the message "Successfully Retrieve a shopcart of customer: [10080]"
 
 Scenario: Update the quantity of an item in a Shopcart
     When I visit the "Home Page"
     And I set the "Customer ID" to "10001"
     And I set the "Product ID" to "1001"
     And I press the "Retrieve" button
-    Then I should see "10001" in the "Customer ID" field
+    Then I should see the message "Successfully Retrieve a prodect of customer: [10001] with product [1001]"
+    And I should see "10001" in the "Customer ID" field
     And I should see "1001" in the "Product ID" field
     And I should see "a" in the "Product Name" field
     And I should see "100" in the "Product Price" field
@@ -68,10 +70,12 @@ Scenario: Update the quantity of an item in a Shopcart
     Then I should see the message "Successfully Update!"
     When I copy the "Customer ID" field
     And I press the "Clear" button
-    And I paste the "Customer ID" field
+    Then I should see the message "Form cleared"
+    When I paste the "Customer ID" field
     And I set the "Product ID" to "1001"
     And I press the "Retrieve" button
-    Then I should see "10001" in the "Customer ID" field
+    Then I should see the message "Successfully Retrieve a prodect of customer: [10001] with product [1001]"
+    And I should see "10001" in the "Customer ID" field
     And I should see "1001" in the "Product ID" field
     And I should see "a" in the "Product Name" field
     And I should see "100" in the "Product Price" field
@@ -81,7 +85,6 @@ Scenario: Update the quantity of an item in a Shopcart
     And I should see "a" in the results
     And I should see "100" in the results
     And I should see "4" in the results
-    And I should see the message "Successfully Retrieve a prodect of customer: [10001] with product [1001]"
 
 Scenario: Read a shopcart
     When I visit the "Home Page"
@@ -100,14 +103,16 @@ Scenario: Read a shopcart
     And I press the "Create" button
     Then I should see the message "Create Customer: [10081] with product [1081] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10080"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10080"
     And I press the "Search" button
-    Then I should see "10080" in the results
+    Then I should see the message "Search Success"
+    And I should see "10080" in the results
     And I should see "1080" in the results
     And I should see "chrysanthemum" in the results
     And I should see "9" in the results
     And I should not see "10081" in the results
-    And I should see the message "Search Success"
+
 
 Scenario: Read a product from a shopcart
     When I visit the "Home Page"
@@ -126,27 +131,28 @@ Scenario: Read a product from a shopcart
     And I press the "Create" button
     Then I should see the message "Create Customer: [10080] with product [1081] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10080"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10080"
     And I set the "Product ID" to "1081"
     And I press the "Retrieve" button
-    Then I should see "10080" in the results
+    Then I should see the message "Successfully Retrieve a prodect of customer: [10080] with product [1081]"
+    And I should see "10080" in the results
     And I should see "1081" in the results
     And I should see "chrysant" in the results
     And I should see "13" in the results
     And I should not see "1080" in the results
-    And I should see the message "Successfully Retrieve a prodect of customer: [10080] with product [1081]"
 
 Scenario: Delete a Product
     When I visit the "Home Page"
     And I set the "Customer ID" to "10001"
     And I set the "Product ID" to "1001"
     And I press the "Delete-prod" button
-    Then the "Customer ID" field should be empty
+    Then I should see the message "The product has been deleted!"
+    And the "Customer ID" field should be empty
     And the "Product ID" field should be empty
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
     And the "Product Quantity" field should be empty
-    And I should see the message "The product has been deleted!"
 
 Scenario: Delete a Shopcart
     When I visit the "Home Page"
@@ -165,14 +171,15 @@ Scenario: Delete a Shopcart
     And I press the "Create" button
     Then I should see the message "Create Customer: [10080] with product [1081] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10080"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10080"
     And I press the "Delete" button
-    Then the "Customer ID" field should be empty
+    Then I should see the message "The shopcart has been deleted!"
+    And the "Customer ID" field should be empty
     And the "Product ID" field should be empty
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
     And the "Product Quantity" field should be empty
-    And I should see the message "The shopcart has been deleted!"
 
 
 
@@ -187,13 +194,14 @@ Scenario: Action - Checkout a customer
     And I press the "Create" button
     Then I should see the message "Create Customer: [10080] with product [1080] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10080"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10080"
     And I press the "Checkout" button
-    Then the "Customer ID" field should be empty
+    Then I should see the message "Checkout Successful for Customer: 10080"
+    And the "Customer ID" field should be empty
     And the "Product ID" field should be empty
     And the "Product Name" field should be empty
     And the "Product Price" field should be empty
-    And I should see the message "Checkout Successful for Customer: 10080"
 
 Scenario: Query shopcarts with Price above 10
     When I visit the "Home Page"
@@ -212,14 +220,15 @@ Scenario: Query shopcarts with Price above 10
     And I press the "Create" button
     Then I should see the message "Create Customer: [10080] with product [1081] Success!"
     When I press the "Clear" button
-    And I set the "Product Price" to "10"
+    Then I should see the message "Form cleared"
+    When I set the "Product Price" to "10"
     And I press the "Search" button
-    Then I should see "10080" in the results
+    Then I should see the message "Search Success"
+    And I should see "10080" in the results
     And I should see "1081" in the results
     And I should see "chrysant" in the results
     And I should see "13" in the results
     And I should not see "1080" in the results
-    And I should see the message "Search Success"
 
 
 Scenario: Query shopcarts for a customer with Price above 10
@@ -246,12 +255,14 @@ Scenario: Query shopcarts for a customer with Price above 10
     And I press the "Create" button
     Then I should see the message "Create Customer: [10081] with product [1081] Success!"
     When I press the "Clear" button
-    And I set the "Customer ID" to "10081"
+    Then I should see the message "Form cleared"
+    When I set the "Customer ID" to "10081"
     And I set the "Product Price" to "10"
     And I press the "Search" button
-    Then I should see "10081" in the results
+    Then I should see the message "Search Success"
+    And I should see "10081" in the results
     And I should see "1081" in the results
     And I should see "chrysant" in the results
     And I should see "13" in the results
     And I should not see "10080" in the results
-    And I should see the message "Search Success"
+    

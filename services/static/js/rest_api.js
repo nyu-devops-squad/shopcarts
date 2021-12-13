@@ -391,8 +391,8 @@ $(function () {
         header += '<th style="width:22%">Product Quantity</th></tr>'
         $("#search_results").append(header);
         $("#search_results").append('</table>');
-
         $("#flash_message").empty();
+        flash_message("Form cleared")
     });
 
 })
