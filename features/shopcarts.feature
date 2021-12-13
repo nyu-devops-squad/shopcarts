@@ -175,8 +175,6 @@ Scenario: Delete a Shopcart
     And I should see the message "The shopcart has been deleted!"
 
 
-
-
 Scenario: Action - Checkout a customer
     When I visit the "Home Page"
     And I set the "Customer ID" to "10080"
