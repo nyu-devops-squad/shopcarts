@@ -102,7 +102,7 @@ class ShopcartResource(Resource):
     ######################################################################
     @api.doc('get_shopcarts')
     @api.response(404, 'Shopcart for the customer does not exist!')
-    @api.marshal_with(shopcart_model)
+    @api.response(200, 'Success')
     def get(self, customer_id):
         """
         Reads a shopcart
@@ -126,7 +126,6 @@ class ShopcartResource(Resource):
     ######################################################################
     @api.doc('delete_shopcart')
     @api.response(204, 'Shopcart deleted')
-    @api.marshal_list_with(shopcart_model, code=204)
     def delete(self,customer_id):
         """
         Deletes a customer's shopcart
@@ -153,7 +152,7 @@ class ShopcartCollection(Resource):
     #------------------------------------------------------------------
     @api.doc('list_shopcarts')
     @api.expect(shopcart_args, validate=True)
-    @api.marshal_list_with(shopcart_model)
+    @api.response(200, 'Success')
     def get(self):
         """
         Return all of the shopcarts
@@ -189,7 +188,7 @@ class ProductResource(Resource):
     ######################################################################
     @api.doc('get_product_from_shopcart')
     @api.response(404, 'Product in shopcart not found')
-    @api.marshal_with(shopcart_model)
+    @api.response(200, 'Success')
     def get(self, customer_id,product_id):
         """
         Read a product from a shopcart
@@ -209,8 +208,8 @@ class ProductResource(Resource):
     @api.doc('update_product_in_shopcart')
     @api.response(404, 'Product not found')
     @api.response(400, 'The posted shopcart data was not valid')
+    @api.response(200, 'Success')
     @api.expect(shopcart_model)
-    @api.marshal_with(shopcart_model)
     def put(self, customer_id, product_id):
         """
         Update the quantity of an item in a Shopcart
@@ -221,7 +220,6 @@ class ProductResource(Resource):
         shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
         if not shopcart:
             return {"error": "ShopCart item for customer_id '{}' was not found.".format(customer_id)}, status.HTTP_404_NOT_FOUND
-            # raise NotFound("ShopCart item for customer_id '{}' was not found.".format(customer_id))
         logging.debug(shopcart)
         shopcart.deserialize(api.payload)
         shopcart.update()
@@ -259,8 +257,8 @@ class ProductCollection(Resource):
     ######################################################################
     @api.doc('add_product_in_shopcart')
     @api.response(400, 'The posted data was not valid')
+    @api.response(201, 'The product added')
     @api.expect(shopcart_model)
-    @api.marshal_with(shopcart_model, code=201)
     def post(self, customer_id):
             """
             Add a product into the shopcart
@@ -291,6 +289,7 @@ class CheckoutResource(Resource):
     ######################################################################
     @api.doc('checkout_customer')
     @api.response(404, 'Customer not found')
+    @api.response(200, 'Success')
     def put(self, customer_id):
         """
         Checkout a customer
