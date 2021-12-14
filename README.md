@@ -1,6 +1,10 @@
 # shopcarts
 
+
+[![Run Python Tests](https://github.com/nyu-devops-squad/shopcarts/actions/workflows/workflow.yml/badge.svg)](https://github.com/nyu-devops-squad/shopcarts/actions/workflows/workflow.yml)
+[![BDD Tests](https://github.com/nyu-devops-squad/shopcarts/actions/workflows/bdd-tests.yml/badge.svg)](https://github.com/nyu-devops-squad/shopcarts/actions/workflows/bdd-tests.yml)
 [![codecov](https://codecov.io/gh/nyu-devops-squad/shopcarts/branch/main/graph/badge.svg?token=HE22505N7V)](https://codecov.io/gh/nyu-devops-squad/shopcarts)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 To run the flask app -  
 ``` 
