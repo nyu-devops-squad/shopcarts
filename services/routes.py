@@ -102,7 +102,7 @@ class ShopcartResource(Resource):
     ######################################################################
     @api.doc('get_shopcarts')
     @api.response(404, 'Shopcart for the customer does not exist!')
-    @api.response(200, 'Success')
+    @api.marshal_list_with(shopcart_model)
     def get(self, customer_id):
         """
         Reads a shopcart
@@ -114,8 +114,7 @@ class ShopcartResource(Resource):
         else:
             shopcarts = Shopcart.find_by_customer_id(customer_id).all()
         if not shopcarts:
-            message = {"error": "Shopcart for the customer does not exist!"}
-            return message, status.HTTP_404_NOT_FOUND
+            abort(status.HTTP_404_NOT_FOUND, "Shopcart for the customer does not exist!")
 
         message = [shopcart.serialize() for shopcart in shopcarts]
         return message, status.HTTP_200_OK
@@ -125,7 +124,7 @@ class ShopcartResource(Resource):
     # DELETE A SHOPCART
     ######################################################################
     @api.doc('delete_shopcart')
-    @api.response(204, 'Shopcart deleted')
+    @api.marshal_list_with(shopcart_model, code=204)
     def delete(self,customer_id):
         """
         Deletes a customer's shopcart
@@ -152,7 +151,7 @@ class ShopcartCollection(Resource):
     #------------------------------------------------------------------
     @api.doc('list_shopcarts')
     @api.expect(shopcart_args, validate=True)
-    @api.response(200, 'Success')
+    @api.marshal_list_with(shopcart_model)
     def get(self):
         """
         Return all of the shopcarts
@@ -188,7 +187,7 @@ class ProductResource(Resource):
     ######################################################################
     @api.doc('get_product_from_shopcart')
     @api.response(404, 'Product in shopcart not found')
-    @api.response(200, 'Success')
+    @api.marshal_with(shopcart_model)
     def get(self, customer_id,product_id):
         """
         Read a product from a shopcart
@@ -196,8 +195,7 @@ class ProductResource(Resource):
         app.logger.info("Request to get a product from {}'s shopcart. ".format(customer_id))
         product = Shopcart.find_by_shopcart_item(customer_id,product_id)
         if not product:
-            message = {"error": "The product does not exist!"}
-            return message, status.HTTP_404_NOT_FOUND
+            abort(status.HTTP_404_NOT_FOUND, "The product does not exist!")
         target_product = product
         app.logger.info("Returning product with id: %s", product_id)
         return target_product.serialize(), status.HTTP_200_OK
@@ -208,8 +206,8 @@ class ProductResource(Resource):
     @api.doc('update_product_in_shopcart')
     @api.response(404, 'Product not found')
     @api.response(400, 'The posted shopcart data was not valid')
-    @api.response(200, 'Success')
     @api.expect(shopcart_model)
+    @api.marshal_with(shopcart_model)
     def put(self, customer_id, product_id):
         """
         Update the quantity of an item in a Shopcart
@@ -219,7 +217,7 @@ class ProductResource(Resource):
         check_content_type("application/json")
         shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
         if not shopcart:
-            return {"error": "ShopCart item for customer_id '{}' was not found.".format(customer_id)}, status.HTTP_404_NOT_FOUND
+            abort(status.HTTP_404_NOT_FOUND, "ShopCart item for customer_id '{}' was not found.".format(customer_id))
         logging.debug(shopcart)
         shopcart.deserialize(api.payload)
         shopcart.update()
@@ -257,8 +255,8 @@ class ProductCollection(Resource):
     ######################################################################
     @api.doc('add_product_in_shopcart')
     @api.response(400, 'The posted data was not valid')
-    @api.response(201, 'The product added')
     @api.expect(shopcart_model)
+    @api.marshal_with(shopcart_model, code=201)
     def post(self, customer_id):
             """
             Add a product into the shopcart
@@ -269,8 +267,7 @@ class ProductCollection(Resource):
             shopcart.deserialize(api.payload)
             product = shopcart.find_by_shopcart_item(customer_id,shopcart.product_id)
             if product:
-                message = {"error": "Product already exist!"}
-                return message, status.HTTP_400_BAD_REQUEST
+                abort(status.HTTP_400_BAD_REQUEST, 'Product already exist!')
             shopcart.create()
             message = shopcart.serialize()
             app.logger.info("Product with id [%s] added in to the customer: [%s]'s shopcart.",shopcart.product_id, shopcart.customer_id)
@@ -289,7 +286,7 @@ class CheckoutResource(Resource):
     ######################################################################
     @api.doc('checkout_customer')
     @api.response(404, 'Customer not found')
-    @api.response(200, 'Success')
+    @api.marshal_list_with(shopcart_model)
     def put(self, customer_id):
         """
         Checkout a customer

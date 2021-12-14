@@ -86,7 +86,7 @@ $(function () {
             });
 
             ajax.fail(function(res) {
-                flash_message(res.responseJSON.error)
+                flash_message(res.responseJSON.message)
             });
         }
     );
@@ -124,7 +124,7 @@ $(function () {
         });
 
         ajax.fail(function(res){
-            flash_message(res.responseJSON.error)
+            flash_message(res.responseJSON.message)
         });
 
     });
@@ -192,7 +192,7 @@ $(function () {
 
         ajax.fail(function(res){
             clear_form_data()
-            flash_message(res.responseJSON.error)
+            flash_message(res.responseJSON.message)
         });
 
     });
@@ -243,7 +243,7 @@ $(function () {
             });
     
             ajax.fail(function(res){
-                flash_message(res.responseJSON.error)
+                flash_message(res.responseJSON.message)
             });
         }
 
@@ -278,7 +278,7 @@ $(function () {
     
             ajax.fail(function(res){
                 clear_form_data()
-                flash_message(res.responseJSON.error)
+                flash_message(res.responseJSON.message)
             });
         }
 
@@ -344,7 +344,7 @@ $(function () {
 
         ajax.fail(function(res){
             clear_form_data()
-            flash_message(res.responseJSON.error)
+            flash_message(res.responseJSON.message)
         });
     });
 
