@@ -86,11 +86,6 @@ class Shopcart(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            # self.customer_id = data["customer_id"]
-            # self.product_id = data["product_id"]
-            # self.product_name = data["product_name"]
-            # self.product_price = data["product_price"]
-            # self.quantity = data["quantity"]
 
             if isinstance(data["customer_id"], int):
                 self.customer_id = data["customer_id"]

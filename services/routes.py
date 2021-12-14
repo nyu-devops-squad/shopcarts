@@ -215,7 +215,6 @@ class ProductResource(Resource):
         This endpoint will update a Shopcart based the body that is posted
         """
         app.logger.info("Request to update Shopcart for costomer_id: %s", customer_id)
-        check_content_type("application/json")
         shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
         if not shopcart:
             abort(status.HTTP_404_NOT_FOUND, "ShopCart item for customer_id '{}' was not found.".format(customer_id))
@@ -263,7 +262,6 @@ class ProductCollection(Resource):
             Add a product into the shopcart
             """
             app.logger.info("Request to add a product into the shopcart")
-            check_content_type("application/json")
             shopcart = Shopcart()
             shopcart.deserialize(api.payload)
             product = shopcart.find_by_shopcart_item(customer_id,shopcart.product_id)
@@ -313,13 +311,3 @@ def init_db():
     global app
     Shopcart.init_db(app)
 
-def check_content_type(media_type):
-    """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", content_type)
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        "Content-Type must be {}".format(media_type),
-    )

@@ -152,9 +152,15 @@ class TestShopcart(unittest.TestCase):
 
     def test_deserialize_bad_data(self):
         """ Test deserialization of bad data """
-        data = "this is not a dictionary"
+        bad_shopcart1 = Shopcart(customer_id="a", product_id="a", product_name="a",product_price="a",quantity="a")
+        bad_shopcart2 = Shopcart(customer_id=1, product_id="a", product_name="a",product_price="a",quantity="a")
+        bad_shopcart3 = Shopcart(customer_id=1, product_id=1, product_name="a",product_price="a",quantity="a")
+        bad_shopcart4 = Shopcart(customer_id=1, product_id=1, product_name="a",product_price=1,quantity="a")
         shopcart = Shopcart()
-        self.assertRaises(DataValidationError, shopcart.deserialize, data)
+        self.assertRaises(DataValidationError, shopcart.deserialize, bad_shopcart1)
+        self.assertRaises(DataValidationError, shopcart.deserialize, bad_shopcart2)
+        self.assertRaises(DataValidationError, shopcart.deserialize, bad_shopcart3)
+        self.assertRaises(DataValidationError, shopcart.deserialize, bad_shopcart4)
 
     def test_find_shopcart_item_by_price_by_customer_id(self):
         """ Find Shopcart items above a price for a customer"""
