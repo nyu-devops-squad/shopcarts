@@ -127,6 +127,13 @@ class TestShopcart(unittest.TestCase):
         self.assertEqual(shopcart.product_name, "abc")
         self.assertEqual(shopcart.product_price, 1234)
         self.assertEqual(shopcart.quantity, 2)
+    
+    def test_deserialize_shopcart_with_bad_data(self):
+        shopcart = Shopcart()
+        # shopcart.deserialize(data)
+        self.assertRaises(DataValidationError, shopcart.deserialize, {})
+        # self.assertRaises(DataValidationError, shopcart.deserialize, [])
+
 
     # def test_find_or_404_not_found(self):
     #     """ Find or return 404 NOT found """
