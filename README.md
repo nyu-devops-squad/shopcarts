@@ -23,13 +23,28 @@ To run testing we use -
     nosetests 
 ```  
 
+To run bdd testing we use -  
+``` 
+    vagrant up
+    vagrant ssh  
+    cd /vagrant      
+    honcho start
+    # open another window
+    vagrant ssh  
+    cd /vagrant 
+    beahve
+```  
+
 #### API calls
 URL | Operation | Description
 -- | -- | --
-`GET /shopcarts/` | LIST | Returns list of all of the shopcart items for all customers
-`GET /shopcarts/<int:customer_id>` | READ | Returns list of all of the shopcart items for a customer
-`GET /shopcarts/<int:customer_id>/products/<int:product_id>` | READ | Returns a particular item from a customer's shopcart
-`POST /shopcarts/<int:customer_id>/products` | CREATE | Creates a new item entry for the shopcart
-`PUT /shopcarts/<int:customer_id>/products/<int:product_id>` | UPDATE | Update a particular item quantity
+`GET /shopcarts/` | LIST | Return list of all of the shopcart items for all customers
+`GET /shopcarts/<int:customer_id>` | READ | Return list of all of the shopcart items for a customer
+`GET /shopcarts/<int:customer_id>/products/<int:product_id>` | READ | Return a particular item from a customer's shopcart
+`POST /shopcarts/<int:customer_id>/products` | CREATE | Create a new item entry for the shopcart
+`PUT /shopcarts/<int:customer_id>/products/<int:product_id>` | UPDATE | Update a particular item's quantity
 `DELETE /shopcarts/<int:customer_id>` | DELETE | Delete all shopcart items for a customer
 `DELETE /shopcarts/<int:customer_id>/products/<int:product_id>` | DELETE | Delete a particular item from a customer's shopcart
+`GET /shopcarts/<int:customer_id>/checkout` | GET | Checkout for a customer and clear the shopcart for the customer
+`GET /shopcarts?price=<int:product_price>` | GET | Return list of all product items in a customer's shopcart with price above a threshold
+`GET /shopcarts/<int:customer_id>?price=<int:product_price>` | GET | Return list of all product items with price above a threshold
