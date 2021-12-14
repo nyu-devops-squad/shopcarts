@@ -86,32 +86,35 @@ class Shopcart(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
+            self.customer_id = data["customer_id"]
+            self.product_id = data["product_id"]
+            self.product_name = data["product_name"]
+            self.product_price = data["product_price"]
+            self.quantity = data["quantity"]
+            # if isinstance(data["customer_id"], int):
+            #     self.customer_id = data["customer_id"]
+            # else:
+            #     raise DataValidationError("Invalid type for int [customer_id]: " + type(data["customer_id"]))
 
-            if isinstance(data["customer_id"], int):
-                self.customer_id = data["customer_id"]
-            else:
-                raise DataValidationError("Invalid type for int [customer_id]: " + type(data["customer_id"]))
+            # if isinstance(data["product_id"], int):
+            #     self.product_id = data["product_id"]
+            # else:
+            #     raise DataValidationError("Invalid type for int [product_id]: " + type(data["product_id"]))
 
-            if isinstance(data["product_id"], int):
-                self.product_id = data["product_id"]
-            else:
-                raise DataValidationError("Invalid type for int [product_id]: " + type(data["product_id"]))
+            # if isinstance(data["product_name"], str):
+            #     self.product_name = data["product_name"]
+            # else:
+            #     raise DataValidationError("Invalid type for int [product_name]: " + type(data["product_name"]))
 
-            if isinstance(data["product_name"], str):
-                self.product_name = data["product_name"]
-            else:
-                raise DataValidationError("Invalid type for int [product_name]: " + type(data["product_name"]))
+            # if isinstance(data["product_price"], (int,float)):
+            #     self.product_price = data["product_price"]
+            # else:
+            #     raise DataValidationError("Invalid type for int [product_price]: " + type(data["product_price"]))
 
-            if isinstance(data["product_price"], (int,float)):
-                self.product_price = data["product_price"]
-            else:
-                raise DataValidationError("Invalid type for int [product_price]: " + type(data["product_price"]))
-
-            if isinstance(data["quantity"], (int,float)):
-                self.quantity = data["quantity"]
-            else:
-                raise DataValidationError("Invalid type for int [quantity]: " + type(data["quantity"]))
-
+            # if isinstance(data["quantity"], (int,float)):
+            #     self.quantity = data["quantity"]
+            # else:
+            #     raise DataValidationError("Invalid type for int [quantity]: " + type(data["quantity"]))
         except KeyError as error:
             raise DataValidationError(
                 "Invalid Shopcart: missing " + error.args[0]
