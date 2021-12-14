@@ -8,6 +8,7 @@ import os
 import sys
 import logging
 from flask import Flask, jsonify, request, url_for, make_response, abort
+from werkzeug.utils import validate_arguments
 from flask_restx import Api, Resource, fields, reqparse, inputs
 from . import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
@@ -206,7 +207,7 @@ class ProductResource(Resource):
     @api.doc('update_product_in_shopcart')
     @api.response(404, 'Product not found')
     @api.response(400, 'The posted shopcart data was not valid')
-    @api.expect(shopcart_model)
+    @api.expect(shopcart_model,validate=True)
     @api.marshal_with(shopcart_model)
     def put(self, customer_id, product_id):
         """
@@ -214,7 +215,6 @@ class ProductResource(Resource):
         This endpoint will update a Shopcart based the body that is posted
         """
         app.logger.info("Request to update Shopcart for costomer_id: %s", customer_id)
-        check_content_type("application/json")
         shopcart = Shopcart.find_by_shopcart_item(customer_id, product_id)
         if not shopcart:
             abort(status.HTTP_404_NOT_FOUND, "ShopCart item for customer_id '{}' was not found.".format(customer_id))
@@ -255,14 +255,13 @@ class ProductCollection(Resource):
     ######################################################################
     @api.doc('add_product_in_shopcart')
     @api.response(400, 'The posted data was not valid')
-    @api.expect(shopcart_model)
+    @api.expect(shopcart_model,validate=True)
     @api.marshal_with(shopcart_model, code=201)
     def post(self, customer_id):
             """
             Add a product into the shopcart
             """
             app.logger.info("Request to add a product into the shopcart")
-            check_content_type("application/json")
             shopcart = Shopcart()
             shopcart.deserialize(api.payload)
             product = shopcart.find_by_shopcart_item(customer_id,shopcart.product_id)
@@ -312,13 +311,3 @@ def init_db():
     global app
     Shopcart.init_db(app)
 
-def check_content_type(media_type):
-    """Checks that the media type is correct"""
-    content_type = request.headers.get("Content-Type")
-    if content_type and content_type == media_type:
-        return
-    app.logger.error("Invalid Content-Type: %s", content_type)
-    abort(
-        status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-        "Content-Type must be {}".format(media_type),
-    )

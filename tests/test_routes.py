@@ -133,7 +133,7 @@ class TestShopcartServer(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_update_shopcart(self):
-        """Update an existing Shopcart"""
+        """Update an existing shopcart"""
         # create a shopcart to update
         test_shopcart = ShopcartFactory()
         resp = self.app.post(
@@ -238,12 +238,6 @@ class TestShopcartServer(TestCase):
             "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-   
-    def test_create_shopcart_no_content_type(self):
-        """ Create a shopcart item with no content type """
-        test_shopcart = ShopcartFactory()
-        resp = self.app.post("{0}/{1}/products/".format(BASE_URL, test_shopcart.customer_id))
-        self.assertEqual(resp.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     def test_get_shopcart_not_found(self):
         """Get a Shopcart thats not found"""
@@ -313,3 +307,10 @@ class TestShopcartServer(TestCase):
             "{0}/{1}".format(BASE_URL, test_shopcart.customer_id), content_type="application/json"
         )
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_checkout_not_exist_customer(self):
+        """checkout a nonexisting customer"""
+        resp = self.app.put(
+            "/api/shopcarts/1001/checkout")
+        self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
+

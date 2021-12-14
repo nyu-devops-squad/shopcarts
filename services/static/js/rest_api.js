@@ -66,10 +66,10 @@ $(function () {
             }
 
             var data = {
-                "product_id": prod_id,
-                "customer_id": cust_id,
-                "product_price": price,
-                "quantity": quantity,
+                "product_id": Number(prod_id),
+                "customer_id": Number(cust_id),
+                "product_price": Number(price),
+                "quantity": Number(quantity),
                 "product_name": name
             };
 
@@ -104,10 +104,10 @@ $(function () {
         var quantity = $("#product_quantity").val();
 
         var data = {
-            "product_id": prod_id,
-            "customer_id": cust_id,
-            "product_price": price,
-            "quantity": quantity,
+            "product_id": Number(prod_id),
+            "customer_id": Number(cust_id),
+            "product_price": Number(price),
+            "quantity": Number(quantity),
             "product_name": name
         };
 
