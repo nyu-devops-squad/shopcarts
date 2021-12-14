@@ -8,6 +8,7 @@ import os
 import sys
 import logging
 from flask import Flask, jsonify, request, url_for, make_response, abort
+from werkzeug.utils import validate_arguments
 from flask_restx import Api, Resource, fields, reqparse, inputs
 from . import status  # HTTP Status Codes
 from werkzeug.exceptions import NotFound
@@ -206,7 +207,7 @@ class ProductResource(Resource):
     @api.doc('update_product_in_shopcart')
     @api.response(404, 'Product not found')
     @api.response(400, 'The posted shopcart data was not valid')
-    @api.expect(shopcart_model)
+    @api.expect(shopcart_model,validate=True)
     @api.marshal_with(shopcart_model)
     def put(self, customer_id, product_id):
         """
@@ -255,7 +256,7 @@ class ProductCollection(Resource):
     ######################################################################
     @api.doc('add_product_in_shopcart')
     @api.response(400, 'The posted data was not valid')
-    @api.expect(shopcart_model)
+    @api.expect(shopcart_model,validate=True)
     @api.marshal_with(shopcart_model, code=201)
     def post(self, customer_id):
             """

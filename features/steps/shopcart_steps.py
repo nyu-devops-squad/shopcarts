@@ -24,11 +24,11 @@ def step_impl(context):
     
     for row in context.table:
         data = {
-            "customer_id": row['Customer ID'],
-            "product_id": row['Product ID'],
+            "customer_id": int(row['Customer ID']),
+            "product_id": int(row['Product ID']),
             "product_name": row['Product Name'],
-            "product_price": row['Product Price'],
-            "quantity": row['Product Quantity']
+            "product_price": float(row['Product Price']),
+            "quantity": int(row['Product Quantity'])
             }
         create_url = context.base_url + '/api/shopcarts/' + row['Customer ID'] + '/products/'
         payload = json.dumps(data)

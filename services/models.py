@@ -1,8 +1,6 @@
 """
 Models for shopcart
-
 All of the models are stored in this module
-
 Models
 ------
 Shopcart
@@ -84,28 +82,48 @@ class Shopcart(db.Model):
     def deserialize(self, data):
         """
         Deserializes a shopcart from a dictionary
-
         Args:
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.product_id = data["product_id"]
-            self.customer_id = data["customer_id"]
-            self.product_price = data["product_price"]
-            self.quantity = data["quantity"]
+            # self.customer_id = data["customer_id"]
+            # self.product_id = data["product_id"]
+            # self.product_name = data["product_name"]
+            # self.product_price = data["product_price"]
+            # self.quantity = data["quantity"]
+
+            if isinstance(data["customer_id"], int):
+                self.customer_id = data["customer_id"]
+            else:
+                raise DataValidationError("Invalid type for int [customer_id]: " + type(data["customer_id"]))
+
+            if isinstance(data["product_id"], int):
+                self.product_id = data["product_id"]
+            else:
+                raise DataValidationError("Invalid type for int [product_id]: " + type(data["product_id"]))
 
             if isinstance(data["product_name"], str):
                 self.product_name = data["product_name"]
             else:
-                raise DataValidationError("Invalid type for string [product_name]: " + type(data["product_name"]))
+                raise DataValidationError("Invalid type for int [product_name]: " + type(data["product_name"]))
+
+            if isinstance(data["product_price"], (int,float)):
+                self.product_price = data["product_price"]
+            else:
+                raise DataValidationError("Invalid type for int [product_price]: " + type(data["product_price"]))
+
+            if isinstance(data["quantity"], (int,float)):
+                self.quantity = data["quantity"]
+            else:
+                raise DataValidationError("Invalid type for int [quantity]: " + type(data["quantity"]))
 
         except KeyError as error:
             raise DataValidationError(
-                "Invalid shopcart: missing " + error.args[0]
+                "Invalid Shopcart: missing " + error.args[0]
             )
         except TypeError as error:
             raise DataValidationError(
-                "Invalid shopcart: body of request contained bad or no data"
+                "Invalid Shopcart: body of request contained bad or no data"
             )
         return self
 
@@ -162,7 +180,6 @@ class Shopcart(db.Model):
     @classmethod
     def find_by_shopcart_item(cls, customer_id, product_id):
         """Returns the shopcart record with the given costomer_id and product_id
-
         Args:
             customer_id (Integer)
             product_id (Integer)
